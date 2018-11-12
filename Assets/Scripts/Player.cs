@@ -6,10 +6,16 @@ public class Player : MonoBehaviour {
 	public float playerSpeed;
 	private Vector3 playerVelocity;
 	private CharacterController controller;
+
+    //gun stuff
+    private BasicGun gun;
+    private bool shot = false;
+
 	// Use this for initialization
 	void Start () {
 		controller = GetComponent<CharacterController>();
 		playerVelocity = new Vector3(0, 0, 0);
+        gun = GetComponentInChildren<BasicGun>();
 	}
 	
 	// Update is called once per frame
@@ -28,6 +34,14 @@ public class Player : MonoBehaviour {
 		}
 
 		controller.Move(playerVelocity);
+
+        // shoot bullet
+        if (!shot && Input.GetAxis("Fire1") != 0)
+        {
+            shot = true;
+            gun.Shoot();
+        }
+        else { shot = false; }
 	}
 
 	Vector3 GetMoveDirection() {
