@@ -10,6 +10,7 @@ public class PlayerDetails : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         // if we havn't set the camera grab it
+        if (mainCamera = null) mainCamera;
 
 	}
 	
