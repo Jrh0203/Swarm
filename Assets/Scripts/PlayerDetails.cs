@@ -4,24 +4,21 @@ using UnityEngine;
 
 public class PlayerDetails : MonoBehaviour {
     [Tooltip("What camera should this canvas face")]
-    [SerializeField] Camera mainCamera;
+    [SerializeField] private Camera mainCamera;
 
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         // if we havn't set the camera grab it
-        if (mainCamera = null) mainCamera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
-
-	}
+        // if (mainCamera == null) mainCamera = Camera.main;
+    }
 	
 	// Update is called once per frame
 	void Update () {
-        
+
         // face canvas towards the camera
-        Vector3 v = mainCamera.transform.position - transform.position;
-        v.x = v.z = 0.0f;
-        transform.LookAt(mainCamera.transform.position - v);
-        transform.Rotate(0, 180, 0);
+        transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.back,
+            mainCamera.transform.rotation * Vector3.up);
         
     }
 }
