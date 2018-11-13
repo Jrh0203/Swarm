@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour {
     [Tooltip("The lifetime in ms of a bullet")]
-    [SerializeField] private float lifeTime = 1000;
+    [SerializeField] private float lifeTime = 100;
 
     [Tooltip("How fast the bullet shoots")]
     [SerializeField] private float shootSpeed = 20;
