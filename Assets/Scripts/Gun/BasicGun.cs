@@ -15,7 +15,7 @@ public class BasicGun : MonoBehaviour {
     [SerializeField] private bool usingCooldown = true;
 
     [Tooltip("How many secounds between each shot")]
-    [SerializeField] private float coolDown = 1.0f;
+    [SerializeField] private float coolDown = .1f;
 
     private float shotTimer;
          

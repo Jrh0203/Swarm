@@ -7,13 +7,15 @@ public class Bullet : MonoBehaviour {
     [SerializeField] private float lifeTime = 1000;
 
     [Tooltip("How fast the bullet shoots")]
-    [SerializeField] private float shootSpeed = 10;
+    [SerializeField] private float shootSpeed = 20;
 
     [Tooltip("Does the bullet die on collision?")]
     [SerializeField] private bool dieOnCol = true;
 
     private float currentTime;
     private Rigidbody rB;
+
+    private float bulletDamage;
 
     // used when object is awoken
     private void Awake()
@@ -23,6 +25,7 @@ public class Bullet : MonoBehaviour {
         currentTime = 0;
 
         rB.velocity = transform.forward * shootSpeed;
+        bulletDamage = 10.0f;
     }
 	
 	// Update is called once per frame
@@ -37,12 +40,15 @@ public class Bullet : MonoBehaviour {
 	}
 
     // Method that destroys the bullet
-    void Seppuku()
+    public void Seppuku()
     {
         Destroy(gameObject);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public float getDamage() {
+        return bulletDamage;
+    }
+    void OnTriggerEnter(Collider collider)
     {
         if (dieOnCol) Seppuku();
     }

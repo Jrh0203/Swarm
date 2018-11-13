@@ -7,9 +7,11 @@ public class Player : MonoBehaviour {
 	private Vector3 playerVelocity;
 	private CharacterController controller;
 
+	private float smoothSpeed = .4f;
     //gun stuff
     private BasicGun gun;
     private bool shot = false;
+	private float hp = 100;
 
 	// Use this for initialization
 	void Start () {
@@ -34,7 +36,11 @@ public class Player : MonoBehaviour {
 		}
 
 		controller.Move(playerVelocity);
-
+		Vector3 look = GetLookDirection();
+		if(look != Vector3.zero) {
+			Vector3 smoothedLook = Vector3.Lerp(transform.forward, look, smoothSpeed);
+			transform.forward = smoothedLook;
+		}
         // shoot bullet
         if (!shot && Input.GetAxis("Fire1") != 0)
         {
@@ -48,5 +54,14 @@ public class Player : MonoBehaviour {
 		Vector3 moveInput = new Vector3(Input.GetAxisRaw("Horizontal"), 0, Input.GetAxisRaw("Vertical"));
 		moveInput = Vector3.ClampMagnitude(moveInput, 1);
 		return moveInput;
+	}
+
+	Vector3 GetLookDirection() {
+		Vector3 newDir = new Vector3(Input.mousePosition.x - Screen.width/2, Input.mousePosition.y - Screen.height/2, 0);
+		return Vector3.Normalize(new Vector3(newDir.x, 0, newDir.y));
+	}
+
+	public void hit(float damage) {
+		hp -= damage;
 	}
 }
