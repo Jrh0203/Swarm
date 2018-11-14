@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerDetails : MonoBehaviour {
     [Tooltip("What camera should this canvas face")]
     [SerializeField] private Camera mainCamera;
-
+    
 
     // Use this for initialization
     void Start () {
