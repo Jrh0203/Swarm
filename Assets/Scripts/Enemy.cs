@@ -4,13 +4,24 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 	public float enemySpeed;
+	public float threshold;
 	private Vector3 enemyVelocity;
+	Vector3[] path;
+	int targetIndex;
+	public bool drawGizmos;
 	private float hp;
 	private CharacterController controller;
 	private bool hit;
+
+	private bool playerMoved;
+	private Node playerNode;
+	private Grid grid;
+	private GameObject player;
 	// Use this for initialization
 	void Start () {
 		controller = GetComponent<CharacterController>();
+		grid = GameObject.FindWithTag("WorldGrid").GetComponent<Grid>();
+		player = GameObject.FindWithTag("Player");
 		hp = 100.0f;
 		hit = false;
 	}
@@ -18,11 +29,18 @@ public class Enemy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		hit = false;
+
+		Node newNode = grid.NodeFromWorldPos(player.transform.position);
+		if(playerNode != newNode) {
+			PathRequestManager.RequestPath(transform.position, player.transform.position, OnPathFound);
+		}
+		playerNode = newNode;
 						
 		if(hp <= 0) {
 			Destroy(gameObject);
 		}
 		Vector3 moveDir = GetMoveDirection();
+		
 		Vector3 moveVelocity = moveDir * Time.deltaTime * enemySpeed;
 
 		enemyVelocity.x = moveVelocity.x;
@@ -36,7 +54,45 @@ public class Enemy : MonoBehaviour {
 	}
 
 	Vector3 GetMoveDirection() {
-		return Vector3.Normalize(GameObject.FindWithTag("Player").transform.position - transform.position);
+		if(path != null) {
+			Vector3 currentWaypoint = path[targetIndex];
+			Vector3 currentPos = transform.position;
+			currentPos.y = 0;
+			currentWaypoint.y = 0;
+			float distance = Vector3.Distance(currentPos, currentWaypoint);
+			if (distance < threshold) {
+				targetIndex ++;
+				currentWaypoint = path[targetIndex];
+			}
+			Vector3 velocity = currentWaypoint - transform.position;
+			return Vector3.Normalize(new Vector3(velocity.x, 0, velocity.z));
+		} else {
+			return Vector3.zero;
+		}
+	}
+
+	public void OnPathFound(Vector3[] newPath, bool pathSuccessful) {
+		if(pathSuccessful && newPath != null) {
+			path = newPath;
+			targetIndex = 0;
+		}
+	}
+	public void OnDrawGizmos() {
+		if(drawGizmos) {
+			if (path != null) {
+				for (int i = targetIndex; i < path.Length; i ++) {
+					Gizmos.color = Color.black;
+					Gizmos.DrawCube(path[i], Vector3.one);
+
+					if (i == targetIndex) {
+						Gizmos.DrawLine(transform.position, path[i]);
+					}
+					else {
+						Gizmos.DrawLine(path[i-1],path[i]);
+					}
+				}
+			}
+		}
 	}
 
 	void OnTriggerEnter(Collider collider) {
