@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 	public float enemySpeed;
-	public float threshold;
 	private Vector3 enemyVelocity;
 	Vector3[] path;
+	Pathfinding pathfinding;
 	int targetIndex;
 	public bool drawGizmos;
 	private float hp;
@@ -42,6 +42,7 @@ public class Enemy : MonoBehaviour {
 		grid = GameObject.FindWithTag("WorldGrid").GetComponent<Grid>();
 		player = GameObject.FindWithTag("Player");
         enemyDetails = GetComponentInChildren<PlayerDetails>();
+		pathfinding = GameObject.FindWithTag("WorldGrid").GetComponent<Pathfinding>();
         hp = startHp;
 		hit = false;
 	}
@@ -51,10 +52,16 @@ public class Enemy : MonoBehaviour {
 		hit = false;
 
 		Node newNode = grid.NodeFromWorldPos(player.transform.position);
-		if(playerNode != newNode) {
-			PathRequestManager.RequestPath(transform.position, player.transform.position, OnPathFound);
+		if(playerNode == null || playerNode != newNode) {
+			playerNode = newNode;
+			Vector3[] rPath = pathfinding.FindPath(transform.position, player.transform.position);
+			if(rPath != null) {
+				path = rPath;
+				targetIndex = 0;
+			} else {
+				print("path not found");
+			}
 		}
-		playerNode = newNode;
 						
 		if(hp <= 0) {
 			Destroy(gameObject);
@@ -74,13 +81,13 @@ public class Enemy : MonoBehaviour {
 	}
 
 	Vector3 GetMoveDirection() {
-		if(path != null) {
+		if(path != null && path.Length > targetIndex) {
 			Vector3 currentWaypoint = path[targetIndex];
 			Vector3 currentPos = transform.position;
 			currentPos.y = 0;
 			currentWaypoint.y = 0;
 			float distance = Vector3.Distance(currentPos, currentWaypoint);
-			if (distance < threshold) {
+			if (distance < grid.nodeRadius) {
 				targetIndex ++;
 				currentWaypoint = path[targetIndex];
 			}
@@ -90,26 +97,12 @@ public class Enemy : MonoBehaviour {
 			return Vector3.zero;
 		}
 	}
-
-	public void OnPathFound(Vector3[] newPath, bool pathSuccessful) {
-		if(pathSuccessful && newPath != null) {
-			path = newPath;
-			targetIndex = 0;
-		}
-	}
 	public void OnDrawGizmos() {
 		if(drawGizmos) {
 			if (path != null) {
 				for (int i = targetIndex; i < path.Length; i ++) {
 					Gizmos.color = Color.black;
-					Gizmos.DrawCube(path[i], Vector3.one);
-
-					if (i == targetIndex) {
-						Gizmos.DrawLine(transform.position, path[i]);
-					}
-					else {
-						Gizmos.DrawLine(path[i-1],path[i]);
-					}
+					Gizmos.DrawCube(path[i], Vector3.one * (grid.nodeRadius * 2 - .1f));
 				}
 			}
 		}
@@ -119,7 +112,7 @@ public class Enemy : MonoBehaviour {
 		if(collider.gameObject.tag == "Player") {
 			Player p = collider.gameObject.GetComponent<Player>();
 			p.hit(10.0f);
-			Destroy(gameObject);
+			Destroy(gameObject);	
 		}
         if(collider.gameObject.layer == LayerMask.NameToLayer("Bullet")) {
 			if(!hit) {

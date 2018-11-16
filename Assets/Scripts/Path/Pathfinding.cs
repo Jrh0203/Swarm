@@ -4,20 +4,13 @@ using System.Diagnostics;
 using UnityEngine;
 
 public class Pathfinding : MonoBehaviour {
-	PathRequestManager requestManager;
 	Grid grid;
 
 	void Awake() {
-		requestManager = GetComponent<PathRequestManager>();
 		grid = GetComponent<Grid>();
 	}
 
-	public void StartFindPath(Vector3 startPos, Vector3 goalPos) {
-		StartCoroutine(FindPath(startPos, goalPos));
-	}
-
-	IEnumerator FindPath(Vector3 startPos, Vector3 goalPos) {
-		Vector3[] pathPoints = new Vector3[0];
+	public Vector3[] FindPath(Vector3 startPos, Vector3 goalPos) {
 		bool foundPath = false;
 		
 		Node startNode = grid.NodeFromWorldPos(startPos);
@@ -55,11 +48,10 @@ public class Pathfinding : MonoBehaviour {
 				}
 			}	
 		}
-		yield return null;
 		if(foundPath) {
-			pathPoints = RetracePath(startNode, goalNode);
+			return RetracePath(startNode, goalNode);;
 		}
-		requestManager.FinishedProcessingPath(pathPoints, foundPath);
+		return null;
 	}
 
 	

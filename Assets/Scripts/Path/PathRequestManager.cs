@@ -27,7 +27,7 @@ public class PathRequestManager : MonoBehaviour {
 		if(!isFinding && pathRequests.Count > 0) {
 			currentPathRequest = pathRequests.Dequeue();
 			isFinding = true;
-			pathfinding.StartFindPath(currentPathRequest.pathStart, currentPathRequest.pathEnd);
+			//pathfinding.StartFindPath(currentPathRequest.pathStart, currentPathRequest.pathEnd);
 		}
 	}
 
