@@ -8,6 +8,8 @@ public class Grid : MonoBehaviour {
     public float nodeRadius;
     Node[,] grid;
 
+    public bool drawGizmos;
+
     int gridWidth;
     int gridHeight;
     void Awake() {
@@ -55,5 +57,19 @@ public class Grid : MonoBehaviour {
             }
         }
         return neighbors;
+    }
+
+    void OnDrawGizmos() {
+        if(drawGizmos) {
+            Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
+            if(grid != null) {
+                for(int x = 0; x < gridWidth; x++) {
+                    for(int y = 0; y < gridHeight; y++) {
+                        Gizmos.color = (grid[x,y].walkable) ? Color.white : Color.red;
+                        Gizmos.DrawCube(grid[x  ,y].worldPosition, Vector3.one * (nodeRadius * 2 - .1f)); 
+                    }
+                }
+            }
+        }
     }
 }
