@@ -41,6 +41,13 @@ public class Grid : MonoBehaviour {
         return grid[xPos, yPos];
     }
 
+    public Vector3 WorldFromNodeXY(int x, int y){
+        float width = nodeRadius*2;
+        var outX = x*width+nodeRadius - gridWorldSize.x/2;
+        var outY = y*width+nodeRadius - gridWorldSize.y/2;
+        return new Vector3(outX,.5f,outY);
+    }
+
     public List<Node> GetNeighbors(Node n) {
         List<Node> neighbors = new List<Node>();
         for(int x = -1; x <= 1; x++) {
@@ -61,11 +68,38 @@ public class Grid : MonoBehaviour {
 
     void OnDrawGizmos() {
         if(drawGizmos) {
+            Node playerNode = NodeFromWorldPos(GameObject.FindWithTag("Player").transform.position);
+            Vector3 playerPos = GameObject.FindWithTag("Player").transform.position;
+            playerPos.y=.5f;
             Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
             if(grid != null) {
                 for(int x = 0; x < gridWidth; x++) {
                     for(int y = 0; y < gridHeight; y++) {
                         Gizmos.color = (grid[x,y].walkable) ? Color.white : Color.red;
+                        RaycastHit hit;
+
+                         Vector3 toPosition = WorldFromNodeXY(x,y);
+                         Vector3 fromPosition = playerPos;
+                         Vector3 direction = toPosition - fromPosition;
+                         int layer_mask = LayerMask.GetMask("Wall");
+                        
+                        if (Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask))
+                        {
+                            Gizmos.color = Color.blue;
+                            grid[x,y].isCover = true;
+                            //Debug.DrawRay(fromPosition, direction, Color.yellow);
+                        } else {
+                            grid[x,y].isCover = false;
+                        }
+
+                        if (!grid[x,y].walkable){
+                            Gizmos.color = Color.red;
+                        }
+                        
+
+                        if(playerNode == grid[x,y]) {
+                            Gizmos.color = Color.cyan;
+                        }
                         Gizmos.DrawCube(grid[x  ,y].worldPosition, Vector3.one * (nodeRadius * 2 - .1f)); 
                     }
                 }
