@@ -6,17 +6,11 @@ public class Enemy : MonoBehaviour {
 	public float enemySpeed;
 	private Vector3 enemyVelocity;
 	Vector3[] path;
-	Pathfinding pathfinding;
 	int targetIndex;
 	public bool drawGizmos;
 	private float hp;
 	private CharacterController controller;
 	private bool hit;
-
-	private bool playerMoved;
-	private Node playerNode;
-	private Grid grid;
-	private GameObject player;
 
     [Tooltip("HP that the enemy starts With")]
     [SerializeField] private float startHp = 100;
@@ -39,10 +33,7 @@ public class Enemy : MonoBehaviour {
     // Use this for initialization
 	void Start () {
 		controller = GetComponent<CharacterController>();
-		grid = GameObject.FindWithTag("WorldGrid").GetComponent<Grid>();
-		player = GameObject.FindWithTag("Player");
         enemyDetails = GetComponentInChildren<PlayerDetails>();
-		pathfinding = GameObject.FindWithTag("WorldGrid").GetComponent<Pathfinding>();
         hp = startHp;
 		hit = false;
 	}
@@ -50,21 +41,9 @@ public class Enemy : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		hit = false;
-
-		Node newNode = grid.NodeFromWorldPos(player.transform.position);
-		if(playerNode == null || playerNode != newNode) {
-			playerNode = newNode;
-			Vector3[] rPath = pathfinding.FindPath(transform.position, player.transform.position);
-			if(rPath != null) {
-				path = rPath;
-				targetIndex = 0;
-			} else {
-				print("path not found");
-			}
-		}
 						
 		if(hp <= 0) {
-			Destroy(gameObject);
+			Death();
 		}
 		Vector3 moveDir = GetMoveDirection();
 		
@@ -79,16 +58,27 @@ public class Enemy : MonoBehaviour {
 
 		controller.Move(enemyVelocity);
 	}
-
+	public void UpdatePath() {
+		Player player = GameManager.Instance.PlayerObj;
+		Grid grid = GameManager.Instance.GridObj;
+		Vector3[] rPath = grid.FindPath(transform.position, player.transform.position);
+		if(rPath != null) {
+			path = rPath;
+			targetIndex = 0;
+		} else {
+			print("path not found");
+		}
+	}
 	Vector3 GetMoveDirection() {
 		if(path != null && path.Length > targetIndex) {
+			Grid grid = GameManager.Instance.GridObj;
 			Vector3 currentWaypoint = path[targetIndex];
 			Vector3 currentPos = transform.position;
 			currentPos.y = 0;
 			currentWaypoint.y = 0;
 			float distance = Vector3.Distance(currentPos, currentWaypoint);
-			if (distance < grid.nodeRadius) {
-				targetIndex ++;
+			if (distance < grid.nodeRadius && targetIndex < path.Length - 1) {
+				targetIndex++;
 				currentWaypoint = path[targetIndex];
 			}
 			Vector3 velocity = currentWaypoint - transform.position;
@@ -101,6 +91,7 @@ public class Enemy : MonoBehaviour {
 		if(drawGizmos) {
 			if (path != null) {
 				for (int i = targetIndex; i < path.Length; i ++) {
+					Grid grid = GameManager.Instance.GridObj;
 					Gizmos.color = Color.black;
 					Gizmos.DrawCube(path[i], Vector3.one * (grid.nodeRadius * 2 - .1f));
 				}
@@ -112,7 +103,7 @@ public class Enemy : MonoBehaviour {
 		if(collider.gameObject.tag == "Player") {
 			Player p = collider.gameObject.GetComponent<Player>();
 			p.hit(10.0f);
-			Destroy(gameObject);	
+			Death();	
 		}
         if(collider.gameObject.layer == LayerMask.NameToLayer("Bullet")) {
 			if(!hit) {
@@ -124,6 +115,11 @@ public class Enemy : MonoBehaviour {
 		}
         //enemyDetails.UpdateHealthBar(hp, startHp);
     }
+
+	void Death() {
+		GameManager.Instance.EnemiesObj.Remove(this);
+		Destroy(gameObject);
+	}
 
     // Finds all the enemys in a radius around oneself, and sets a list containing all the enemy components, as well as 
     // a list of the other colliders in the neighborhoot

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Camera
   - Manager
+  - Enemy
+  - WorldGrid
   layers:
   - Default
   - TransparentFX
@@ -17,7 +19,7 @@ TagManager:
   - 
   - PostProcessing
   - Bullet
-  - 
+  - Wall
   - 
   - 
   - 

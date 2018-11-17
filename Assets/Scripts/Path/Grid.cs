@@ -17,6 +17,26 @@ public class Grid : MonoBehaviour {
         gridHeight = Mathf.RoundToInt(gridWorldSize.y / (nodeRadius * 2));
         CreateGrid();
     }
+
+    public void UpdateCover() {   
+        for(int x = 0; x < gridWidth; x++) {
+            for(int y = 0; y < gridHeight; y++) {
+                RaycastHit hit;
+
+                Vector3 toPosition = WorldFromNodeXY(x,y);
+                Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
+                Vector3 direction = toPosition - fromPosition;
+                int layer_mask = LayerMask.GetMask("Wall");
+                
+                if (Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
+                    grid[x,y].isCover = true;
+                } else {
+                    grid[x,y].isCover = false;
+                }
+            }
+        }
+        
+    }
     public int MaxSize {
         get {
             return gridWidth * gridHeight;
@@ -66,37 +86,89 @@ public class Grid : MonoBehaviour {
         return neighbors;
     }
 
+    public Vector3[] FindPath(Vector3 startPos, Vector3 goalPos) {
+		bool foundPath = false;
+		
+		Node startNode = NodeFromWorldPos(startPos);
+		Node goalNode = NodeFromWorldPos(goalPos);
+		
+		Heap<Node> openSet = new Heap<Node>(MaxSize);
+		HashSet<Node> closedSet = new HashSet<Node>();
+		openSet.Add(startNode);
+
+		while(openSet.Count > 0) {
+			Node min = openSet.RemoveFirst();
+			closedSet.Add(min);
+
+			if(min == goalNode) {
+				foundPath = true;
+				break;
+			}
+
+			List<Node> neighbors = GetNeighbors(min);
+			foreach(Node neighbor in neighbors) {
+				if(closedSet.Contains(neighbor) || !neighbor.walkable) {
+					continue;
+				}
+				int newDistance = min.gCost + GetDistance(min, neighbor);
+				if(neighbor.gCost > newDistance || !openSet.Contains(neighbor)) {
+					neighbor.gCost = newDistance;
+					neighbor.hCost = GetDistance(neighbor, goalNode);
+					neighbor.parent = min;
+					
+					if(!openSet.Contains(neighbor)) {
+						openSet.Add(neighbor);
+					} else {
+						openSet.UpdateItem(neighbor);
+					}
+				}
+			}	
+		}
+		if(foundPath) {
+			return RetracePath(startNode, goalNode);;
+		}
+		return null;
+	}
+
+	
+	Vector3[] RetracePath(Node start, Node end) {
+		List<Vector3> path = new List<Vector3>();
+
+		Node current = end;
+		while(current != start) {
+			path.Add(current.worldPosition);
+			current = current.parent;
+		}
+		path.Reverse();
+		return path.ToArray();
+	}
+
+
+	int GetDistance(Node a, Node b) {
+		int distX = Mathf.Abs(a.gridX - b.gridX);
+		int distY = Mathf.Abs(a.gridY - b.gridY);
+
+		if(distX > distY) {
+			return 14 * distY + 10 * (distX - distY);
+		} else {
+			return 14 * distX + 10 * (distY - distX);
+		}
+	}
+
     void OnDrawGizmos() {
-        if(drawGizmos) {
-            Node playerNode = NodeFromWorldPos(GameObject.FindWithTag("Player").transform.position);
-            Vector3 playerPos = GameObject.FindWithTag("Player").transform.position;
-            playerPos.y=.5f;
+        if(drawGizmos && GameManager.Instance != null) {
+            Node playerNode = NodeFromWorldPos(GameManager.Instance.PlayerObj.transform.position);
             Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
             if(grid != null) {
                 for(int x = 0; x < gridWidth; x++) {
                     for(int y = 0; y < gridHeight; y++) {
                         Gizmos.color = (grid[x,y].walkable) ? Color.white : Color.red;
-                        RaycastHit hit;
-
-                         Vector3 toPosition = WorldFromNodeXY(x,y);
-                         Vector3 fromPosition = playerPos;
-                         Vector3 direction = toPosition - fromPosition;
-                         int layer_mask = LayerMask.GetMask("Wall");
-                        
-                        if (Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask))
-                        {
-                            Gizmos.color = Color.blue;
-                            grid[x,y].isCover = true;
-                            //Debug.DrawRay(fromPosition, direction, Color.yellow);
-                        } else {
-                            grid[x,y].isCover = false;
-                        }
-
                         if (!grid[x,y].walkable){
                             Gizmos.color = Color.red;
                         }
-                        
-
+                        if(grid[x,y].isCover) {
+                            Gizmos.color = Color.blue;
+                        }
                         if(playerNode == grid[x,y]) {
                             Gizmos.color = Color.cyan;
                         }
