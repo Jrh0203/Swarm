@@ -7,7 +7,7 @@ TagManager:
   - Camera
   - Manager
   - Enemy
-  - WorldGrid
+  - Grid
   layers:
   - Default
   - TransparentFX
