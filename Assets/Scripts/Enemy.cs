@@ -110,7 +110,7 @@ public class Enemy : MonoBehaviour {
 				Bullet b = collider.gameObject.GetComponent<Bullet>();
 				hit = true;
 				hp -= b.getDamage();
-				b.Seppuku();
+				b.Seppuku();	
 			}
 		}
         //enemyDetails.UpdateHealthBar(hp, startHp);

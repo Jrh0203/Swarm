@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid : MonoBehaviour {
+    private int inSightPenalty = 10;
     public Vector2 gridWorldSize;
     public LayerMask unwalkable;
     public float nodeRadius;
@@ -18,24 +19,26 @@ public class Grid : MonoBehaviour {
         CreateGrid();
     }
 
-    public void UpdateCover() {   
+    public void UpdateCover() {
         for(int x = 0; x < gridWidth; x++) {
             for(int y = 0; y < gridHeight; y++) {
-                RaycastHit hit;
-
                 Vector3 toPosition = WorldFromNodeXY(x,y);
                 Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
-                Vector3 direction = toPosition - fromPosition;
-                int layer_mask = LayerMask.GetMask("Wall");
-                
-                if (Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
-                    grid[x,y].isCover = true;
+                if(Vector3.Distance(toPosition, fromPosition) < GameManager.Instance.PlayerObj.Range) {
+                    RaycastHit hit;
+                    Vector3 direction = toPosition - fromPosition;
+                    int layer_mask = LayerMask.GetMask("Wall");
+                    
+                    if (Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
+                        grid[x,y].isCover = true;
+                    } else {
+                        grid[x,y].isCover = false;
+                    }
                 } else {
-                    grid[x,y].isCover = false;
+                    grid[x,y].isCover = true;
                 }
             }
         }
-        
     }
     public int MaxSize {
         get {
@@ -110,7 +113,7 @@ public class Grid : MonoBehaviour {
 				if(closedSet.Contains(neighbor) || !neighbor.walkable) {
 					continue;
 				}
-				int newDistance = min.gCost + GetDistance(min, neighbor);
+				int newDistance = min.gCost + GetDistance(min, neighbor) + ((!neighbor.isCover) ? inSightPenalty : 0);
 				if(neighbor.gCost > newDistance || !openSet.Contains(neighbor)) {
 					neighbor.gCost = newDistance;
 					neighbor.hCost = GetDistance(neighbor, goalNode);
