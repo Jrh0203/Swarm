@@ -58,10 +58,35 @@ public class Enemy : MonoBehaviour {
 
 		controller.Move(enemyVelocity);
 	}
-	public void UpdatePath() {
+	public void UpdatePath(int idx) {
+		
 		Player player = GameManager.Instance.PlayerObj;
 		Grid grid = GameManager.Instance.GridObj;
+		List<Node> circleSpots = GameManager.Instance.CircleSpotsObj;
 		Vector3[] rPath = grid.FindPath(transform.position, player.transform.position);
+		float bestDist = 100000.0f;
+		Vector3 bestPos = new Vector3(0,0,0);
+		Node bestNode = circleSpots[0];
+		int maxCapacity = (int)(GameManager.Instance.EnemiesObj.Count/circleSpots.Count)+1;
+		if (circleSpots.Count>0){
+			foreach (Node n in circleSpots){
+				if (n.capacity<maxCapacity){
+					Vector3 pos = grid.WorldFromNodeXY(n.gridX,n.gridY);
+					float dist = (transform.position-pos).magnitude;
+					if (dist<bestDist){
+						bestDist = dist;
+						bestPos = pos;
+						bestNode = n;
+					}
+				}
+			}
+			bestNode.capacity+=1;
+			
+			rPath = grid.FindPath(transform.position, bestPos);
+		}
+		
+		//
+		
 		if(rPath != null) {
 			path = rPath;
 			targetIndex = 0;

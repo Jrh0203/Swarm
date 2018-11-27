@@ -22,6 +22,8 @@ public class Grid : MonoBehaviour {
     public void UpdateCover() {
         for(int x = 0; x < gridWidth; x++) {
             for(int y = 0; y < gridHeight; y++) {
+            	grid[x,y].isCircle = false;
+                grid[x,y].capacity = 0;
                 Vector3 toPosition = WorldFromNodeXY(x,y);
                 Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
                 if(Vector3.Distance(toPosition, fromPosition) < GameManager.Instance.PlayerObj.Range) {
@@ -39,6 +41,28 @@ public class Grid : MonoBehaviour {
                 }
             }
         }
+    }
+
+    public List<Node> UpdateBattleCircle(){
+    	List<Node> spots = new List<Node>();
+    	//Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
+    	Vector3 direction = new Vector3(1,0,0);
+    	direction = direction*GameManager.Instance.PlayerObj.Range;
+    	int layer_mask = LayerMask.GetMask("Wall");
+    	Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
+    	int inc = 3;
+    	for (int deg = 0; deg < 360; deg+=inc){
+    		Quaternion rotation = Quaternion.Euler(0,inc,0);
+			Vector3 myVector = Vector3.one;
+			direction = rotation * direction;
+			RaycastHit hit;
+			Node gridNode = NodeFromWorldPos(fromPosition+direction);
+			if (!Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
+                gridNode.isCircle = true;
+                spots.Add(gridNode);
+            }
+    	}
+        return spots;
     }
     public int MaxSize {
         get {
@@ -174,6 +198,9 @@ public class Grid : MonoBehaviour {
                         }
                         if(playerNode == grid[x,y]) {
                             Gizmos.color = Color.cyan;
+                        }
+                        if (grid[x,y].isCircle){
+                        	Gizmos.color = Color.green;
                         }
                         Gizmos.DrawCube(grid[x  ,y].worldPosition, Vector3.one * (nodeRadius * 2 - .1f)); 
                     }

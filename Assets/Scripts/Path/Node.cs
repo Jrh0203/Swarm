@@ -5,6 +5,8 @@ using UnityEngine;
 public class Node : IHeapItem<Node>{
 	public bool walkable;
 	public bool isCover;
+	public bool isCircle;
+	public int capacity;
 	public Vector3 worldPosition;
 
 	//distance from start
@@ -21,6 +23,8 @@ public class Node : IHeapItem<Node>{
 		gridX = pGridX;
 		gridY = pGridY;
 		isCover = false;
+		isCircle = false;
+		capacity = 0;
 	}	
 
 	public int fCost {
