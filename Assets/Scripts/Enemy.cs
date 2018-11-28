@@ -23,18 +23,7 @@ public class Enemy : MonoBehaviour {
 
     PlayerDetails enemyDetails;
 
-    // Flocking stuff
-    [Tooltip("Person space bubble, no one shall enter this radius")]
-    [SerializeField] private float noEntryRadius = 1;
-
-    [Tooltip("radius for gameobjects it should know about")]
-    [SerializeField] private float neighborhoodRadius = 10;
-
-    [SerializeField] private float alignWeight = 1;
-    [SerializeField] private float cohWeight = 1;
-    [SerializeField] private float sepWeight = 1;
-    [SerializeField] private float sepHeavyWeight = 100;
-    [SerializeField] private bool distanceModHeavy = true;
+   
 
     // Use this for initialization
 	void Start () {
@@ -130,65 +119,5 @@ public class Enemy : MonoBehaviour {
 			}
 		}
         //enemyDetails.UpdateHealthBar(hp, startHp);
-    }
-
-    // Finds all the enemys in a radius around oneself, and sets a list containing all the enemy components, as well as 
-    // a list of the other colliders in the neighborhoot
-    private void GetNeighborhood(float radius, out List<Enemy> enemies, out List<GameObject> otherCol)
-    {
-        enemies = new List<Enemy>();
-        otherCol = new List<GameObject>();
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-        foreach (Collider c in hitColliders)
-        {
-            GameObject g = c.gameObject;
-            Enemy e = g.GetComponent<Enemy>();
-            if (e != null) enemies.Add(e);
-            else otherCol.Add(g);
-        }
-    }
-
-
-    // get the resultant vector
-    private Vector3 GetResultant()
-    {
-        List<Enemy> enemies;
-        List<GameObject> otherCols;
-
-        GetNeighborhood(neighborhoodRadius, out enemies, out otherCols);
-
-        Vector3 alignment = GetAlignment(enemies);
-        Vector3 cohesion = GetCohesion(enemies);
-        Vector3 seperation = GetSeperation(enemies, otherCols);
-
-        Vector3 resultant = (alignment + cohesion + seperation);
-        resultant.Normalize();
-
-        return resultant;
-    }
-
-    // get the allignment with its neighboring enemys
-    private Vector3 GetAlignment(List<Enemy> neighbors)
-    {
-        Vector3 total = Vector3.zero;
-        foreach (Enemy e in neighbors)
-        {
-            total += e.GetComponent<CharacterController>().velocity;
-        }
-        Vector3 average = total / neighbors.Count;
-        return alignWeight * average;
-    }
-
-    // get Cohesion comonent for the floc behavior
-    private Vector3 GetCohesion(List<Enemy> neighbors)
-    {
-        return Vector3.zero;
-    }
-
-    // get Seperation compontnet for the flock behavior 
-    private Vector3 GetSeperation(List<Enemy> neighbors, List<GameObject> avoid)
-    {
-        return Vector3.zero;
     }
 }

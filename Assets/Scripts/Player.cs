@@ -62,6 +62,6 @@ public class Player : MonoBehaviour {
 	}
 
 	public void hit(float damage) {
-		hp -= damage;
+		hp -= damage;                                           
 	}
 }
