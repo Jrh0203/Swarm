@@ -58,9 +58,6 @@ public class GameManager : MonoBehaviour {
 			Node newNode = grid.NodeFromWorldPos(player.transform.position);
 			if(oldPlayerNode == null || oldPlayerNode != newNode) {
 				oldPlayerNode = newNode;
-				foreach(Enemy e in enemies) {
-					e.UpdatePath();
-				}
 				grid.UpdateCover();
 			}
 		}

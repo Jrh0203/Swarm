@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Grid : MonoBehaviour {
@@ -89,11 +90,12 @@ public class Grid : MonoBehaviour {
         return neighbors;
     }
 
-    public Vector3[] FindPath(Vector3 startPos, Vector3 goalPos) {
+    public void FindPath(PathRequest request, Action<PathResult> callback) {
 		bool foundPath = false;
 		
-		Node startNode = NodeFromWorldPos(startPos);
-		Node goalNode = NodeFromWorldPos(goalPos);
+		Vector3[] waypoints = new Vector3[0];
+		Node startNode = NodeFromWorldPos(request.startPos);
+		Node endNode = NodeFromWorldPos(request.endPos);
 		
 		Heap<Node> openSet = new Heap<Node>(MaxSize);
 		HashSet<Node> closedSet = new HashSet<Node>();
@@ -103,7 +105,7 @@ public class Grid : MonoBehaviour {
 			Node min = openSet.RemoveFirst();
 			closedSet.Add(min);
 
-			if(min == goalNode) {
+			if(min == endNode) {
 				foundPath = true;
 				break;
 			}
@@ -116,7 +118,7 @@ public class Grid : MonoBehaviour {
 				int newDistance = min.gCost + GetDistance(min, neighbor) + ((!neighbor.isCover) ? inSightPenalty : 0);
 				if(neighbor.gCost > newDistance || !openSet.Contains(neighbor)) {
 					neighbor.gCost = newDistance;
-					neighbor.hCost = GetDistance(neighbor, goalNode);
+					neighbor.hCost = GetDistance(neighbor, endNode);
 					neighbor.parent = min;
 					
 					if(!openSet.Contains(neighbor)) {
@@ -128,9 +130,10 @@ public class Grid : MonoBehaviour {
 			}	
 		}
 		if(foundPath) {
-			return RetracePath(startNode, goalNode);;
+			waypoints = RetracePath(startNode, endNode);
+            foundPath = waypoints.Length > 0;
 		}
-		return null;
+		callback.Invoke(new PathResult(waypoints, foundPath, request.callback));
 	}
 
 	
