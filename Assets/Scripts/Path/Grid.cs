@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid : MonoBehaviour {
-    private int inSightPenalty = 10;
+    private int inSightPenalty = 1;
     public Vector2 gridWorldSize;
     public LayerMask unwalkable;
     public float nodeRadius;
