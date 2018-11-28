@@ -57,7 +57,7 @@ public class Grid : MonoBehaviour {
 			direction = rotation * direction;
 			RaycastHit hit;
 			Node gridNode = NodeFromWorldPos(fromPosition+direction);
-			if (!Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
+			if (gridNode.walkable && !Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
                 gridNode.isCircle = true;
                 spots.Add(gridNode);
             }

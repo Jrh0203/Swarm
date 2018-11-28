@@ -92,6 +92,7 @@ public class Enemy : MonoBehaviour {
 			targetIndex = 0;
 		} else {
 			print("path not found");
+			print(circleSpots.Count);
 		}
 	}
 	Vector3 GetMoveDirection() {
