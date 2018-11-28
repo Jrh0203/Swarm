@@ -61,27 +61,12 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
-		enemies = new HashSet<Enemy>();
-		foreach(GameObject enemyObj in enemyObjects) {
-			enemies.Add(enemyObj.GetComponent<Enemy>());
-		}
-		
 		if(grid != null) {
 			Node newNode = grid.NodeFromWorldPos(player.transform.position);
 			if(oldPlayerNode == null || oldPlayerNode != newNode) {
 				grid.UpdateCover();
 				circleSpots = grid.UpdateBattleCircle();
 				oldPlayerNode = newNode;
-				int idx = 0;
-				foreach(Enemy e in enemies) {
-					e.UpdatePath(idx);
-					idx+=1;
-				}
-				
-				
-
 			}
 		}
 	}

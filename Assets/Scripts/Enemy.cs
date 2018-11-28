@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour {
+	const float minPathUpdateTime = .2f;
 	public float enemySpeed;
 	private Vector3 enemyVelocity;
 	Vector3[] path;
@@ -36,6 +37,7 @@ public class Enemy : MonoBehaviour {
         enemyDetails = GetComponentInChildren<PlayerDetails>();
         hp = startHp;
 		hit = false;
+		StartCoroutine(UpdatePath());
 	}
 	
 	// Update is called once per frame
@@ -58,37 +60,26 @@ public class Enemy : MonoBehaviour {
 
 		controller.Move(enemyVelocity);
 	}
-	public void UpdatePath(int idx) {
-		
+	IEnumerator UpdatePath() {
+		float variance = Random.Range(-.05f, .05f);
 		Player player = GameManager.Instance.PlayerObj;
-		Grid grid = GameManager.Instance.GridObj;
-		List<Node> circleSpots = GameManager.Instance.CircleSpotsObj;
-		Vector3[] rPath = grid.FindPath(transform.position, player.transform.position);
-		float bestDist = 100000.0f;
-		Vector3 bestPos = new Vector3(0,0,0);
-		Node bestNode = circleSpots[0];
-		int maxCapacity = (int)(GameManager.Instance.EnemiesObj.Count/circleSpots.Count)+1;
-		if (circleSpots.Count>0){
-			foreach (Node n in circleSpots){
-				if (n.capacity<maxCapacity){
-					Vector3 pos = grid.WorldFromNodeXY(n.gridX,n.gridY);
-					float dist = (transform.position-pos).magnitude;
-					if (dist<bestDist){
-						bestDist = dist;
-						bestPos = pos;
-						bestNode = n;
-					}
-				}
+		PathRequestManager.RequestPath(new PathRequest(transform.position, player.transform.position, OnPathFound));
+
+		Node playerNodeOld = GameManager.Instance.GridObj.NodeFromWorldPos(player.transform.position);
+		while (true) {
+			yield return new WaitForSeconds (minPathUpdateTime + variance);
+			Node playerNodeNew = GameManager.Instance.GridObj.NodeFromWorldPos(player.transform.position);
+			float distance = (player.transform.position - transform.position).magnitude;
+			if (playerNodeNew != playerNodeOld) {
+				PathRequestManager.RequestPath (new PathRequest(transform.position, player.transform.position, OnPathFound));
+				playerNodeOld = playerNodeNew;
 			}
-			bestNode.capacity+=1;
-			
-			rPath = grid.FindPath(transform.position, bestPos);
 		}
-		
-		//
-		
-		if(rPath != null) {
-			path = rPath;
+	}
+
+	public void OnPathFound(Vector3[] path, bool pathFound) {
+		if(pathFound) {
+			this.path = path;
 			targetIndex = 0;
 		} else {
 			print("path not found");
