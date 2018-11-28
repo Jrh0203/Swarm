@@ -13,6 +13,18 @@ public class Player : MonoBehaviour {
     private bool shot = false;
 	private float hp = 100;
 
+	private float range = 20;
+
+	public float Range {
+		get {
+			return range;
+		}
+
+		set {
+			range = value;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 		controller = GetComponent<CharacterController>();
