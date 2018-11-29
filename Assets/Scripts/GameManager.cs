@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour {
 	HashSet<Enemy> enemies;
 	Player player;
 	Grid grid;
+	HashSet<Node> circleSpots;
 
 	private Node oldPlayerNode;
 
@@ -28,8 +29,11 @@ public class GameManager : MonoBehaviour {
 		enemies = new HashSet<Enemy>();
 		foreach(GameObject enemyObj in enemyObjects) {
 			enemies.Add(enemyObj.GetComponent<Enemy>());
+			foreach(GameObject otherEnemy in enemyObjects) {
+				Physics.IgnoreCollision(enemyObj.GetComponent<Collider>(), otherEnemy.GetComponent<Collider>());
+			}
 		}
-
+		circleSpots = new HashSet<Node>();
 		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 		grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
 	}
@@ -51,6 +55,12 @@ public class GameManager : MonoBehaviour {
 			return grid;
 		}
 	}
+
+	public HashSet<Node> CircleSpotsObj {
+		get {
+			return circleSpots;
+		}
+	}
 	
 	// Update is called once per frame
 	void Update () {
@@ -58,7 +68,8 @@ public class GameManager : MonoBehaviour {
 			Node newNode = grid.NodeFromWorldPos(player.transform.position);
 			if(oldPlayerNode == null || oldPlayerNode != newNode) {
 				oldPlayerNode = newNode;
-				grid.UpdateCover();
+				//grid.UpdateCover();
+				circleSpots = grid.UpdateBattleCircle();
 			}
 		}
 	}

@@ -11,7 +11,7 @@ public class Enemy : MonoBehaviour {
 	private float hp;
 	private CharacterController controller;
 	private bool hit;
-	const float minUpdateTime = .25f;
+	const float minUpdateTime = .1f;
     [Tooltip("HP that the enemy starts With")]
     [SerializeField] private float startHp = 100;
 
@@ -45,18 +45,60 @@ public class Enemy : MonoBehaviour {
 	}
 	IEnumerator UpdatePath() {
 		Player player = GameManager.Instance.PlayerObj;
-		PathRequestManager.RequestPath(new PathRequest(transform.position, player.transform.position, OnPathFound));
+		Grid grid = GameManager.Instance.GridObj;
 
-		float variance = Random.Range(0, minUpdateTime/2);
-		Node playerNodeOld = GameManager.Instance.GridObj.NodeFromWorldPos(player.transform.position);
+		float variance = Random.Range(0, minUpdateTime);
+		Node oldPlayerNode = null;
 		while (true) {
-			yield return new WaitForSeconds (minUpdateTime/2 + variance);
-			Node playerNodeNew = GameManager.Instance.GridObj.NodeFromWorldPos(player.transform.position);
-			if (playerNodeNew != playerNodeOld) {
-				PathRequestManager.RequestPath (new PathRequest(transform.position, player.transform.position, OnPathFound));
-				playerNodeOld = playerNodeNew;
+			yield return new WaitForSeconds (variance);
+			//update the path if the player has moved within the last update time
+			Node newPlayerNode = grid.NodeFromWorldPos(player.transform.position);
+			if (oldPlayerNode == null || oldPlayerNode != newPlayerNode) {
+				Node dest = findClosestCircleNode();
+				Vector3 newPos;
+				if(dest != null) {
+					newPos = grid.WorldFromNodeXY(dest.gridX, dest.gridY);
+				} else {
+					newPos = player.transform.position;
+				}
+				PathRequestManager.RequestPath (new PathRequest(transform.position, newPos, OnPathFound));
+				oldPlayerNode = newPlayerNode;
+			}
+			yield return new WaitForSeconds (minUpdateTime - variance);
+		}
+	}
+
+	public Node findClosestCircleNode() {
+		Player player = GameManager.Instance.PlayerObj;
+		Grid grid = GameManager.Instance.GridObj;
+		HashSet<Node> circleSpots = GameManager.Instance.CircleSpotsObj;
+		print("circle spots" + circleSpots.Count);
+		if(circleSpots.Count <= 0) {
+			return null;
+		}
+
+		int maxCapacity = 1;
+		float bestDist = float.MaxValue;
+		Vector3 bestPos;
+		Node bestNode = null;
+		
+		foreach (Node n in circleSpots){
+			if (n.capacity < maxCapacity){
+				Vector3 pos = grid.WorldFromNodeXY(n.gridX, n.gridY);
+				float dist = (transform.position - pos).magnitude;
+				if (dist < bestDist){
+					bestDist = dist;
+					bestPos = pos;
+					bestNode = n;
+				}
 			}
 		}
+		if(bestNode != null) {
+			bestNode.capacity++;
+		} else {
+			print("no circle spots" + GameManager.Instance.EnemiesObj.Count + " " + circleSpots.Count + " " + maxCapacity);
+		}
+		return bestNode;
 	}
 
 	public void OnPathFound(Vector3[] path, bool pathFound) {

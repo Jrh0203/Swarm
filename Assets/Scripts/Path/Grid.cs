@@ -4,7 +4,7 @@ using System;
 using UnityEngine;
 
 public class Grid : MonoBehaviour {
-    private int inSightPenalty = 10;
+    private int inSightPenalty = 0;
     public Vector2 gridWorldSize;
     public LayerMask unwalkable;
     public float nodeRadius;
@@ -41,6 +41,34 @@ public class Grid : MonoBehaviour {
             }
         }
     }
+
+    public HashSet<Node> UpdateBattleCircle(){
+        //reset booleans
+        for(int x = 0; x < gridWidth; x++) {
+            for(int y = 0; y < gridHeight; y++) {
+                grid[x,y].isCircle = false;
+                grid[x,y].capacity = 0;
+            }
+        }
+    	HashSet<Node> spots = new HashSet<Node>();
+    	Vector3 direction = new Vector3(1,0,0) * GameManager.Instance.PlayerObj.Range;
+    	int layer_mask = LayerMask.GetMask("Wall");
+    	Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
+    	int inc = 4;
+    	for (int deg = 0; deg < 360; deg+=inc){
+    		Quaternion rotation = Quaternion.Euler(0,inc,0);
+			direction = rotation * direction;
+			RaycastHit hit;
+			Node gridNode = NodeFromWorldPos(fromPosition+direction);
+			if (gridNode.walkable && !spots.Contains(gridNode) &&
+             !Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
+                gridNode.isCircle = true;
+                spots.Add(gridNode);
+            }
+    	}
+        return spots;
+    }
+
     public int MaxSize {
         get {
             return gridWidth * gridHeight;
@@ -177,6 +205,9 @@ public class Grid : MonoBehaviour {
                         }
                         if(playerNode == grid[x,y]) {
                             Gizmos.color = Color.cyan;
+                        }
+                        if (grid[x,y].isCircle){
+                        	Gizmos.color = Color.green;
                         }
                         Gizmos.DrawCube(grid[x  ,y].worldPosition, Vector3.one * (nodeRadius * 2 - .1f)); 
                     }

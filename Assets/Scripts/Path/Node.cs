@@ -6,6 +6,8 @@ public class Node : IHeapItem<Node>{
 	public bool walkable;
 	public bool isCover;
 	public Vector3 worldPosition;
+	public bool isCircle;
+	public int capacity;
 
 	//distance from start
 	public int gCost;
@@ -21,6 +23,8 @@ public class Node : IHeapItem<Node>{
 		gridX = pGridX;
 		gridY = pGridY;
 		isCover = false;
+		isCircle = false;
+		capacity = 0;
 	}	
 
 	public int fCost {
