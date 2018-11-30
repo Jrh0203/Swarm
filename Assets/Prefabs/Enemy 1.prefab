@@ -25,6 +25,7 @@ GameObject:
   - component: {fileID: 143022797281383546}
   - component: {fileID: 114991747936158354}
   - component: {fileID: 114760967730199340}
+  - component: {fileID: 114902449298718322}
   m_Layer: 0
   m_Name: Enemy 1
   m_TagString: Enemy
@@ -113,6 +114,36 @@ MonoBehaviour:
   bullet: {fileID: 114047069408740918, guid: 0be0ecbe3cb78fa41aee35dc4dce71e2, type: 2}
   usingCooldown: 1
   coolDown: 0.5
+--- !u!114 &114902449298718322
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1125219146448780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d20a9be54a1ebb4cb8d835d18c056c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flockUpdateTime: 0.2
+  flockSpeed: 1
+  noEntryRadius: 1
+  neighborhoodRadius: 10
+  alignWeight: 1
+  cohWeight: 1
+  sepWeight: 1
+  sepHeavyWeight: 100
+  distanceModHeavy: 1
+  target: 2
+  c:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  view: {x: 0, y: 0, z: 0}
+  mag: 0
+  flockLayer: 0
 --- !u!114 &114991747936158354
 MonoBehaviour:
   m_ObjectHideFlags: 1

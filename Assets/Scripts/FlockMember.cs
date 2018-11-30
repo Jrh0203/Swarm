@@ -45,8 +45,8 @@ public class FlockMember : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 vel = flockSpeed * GetResultant() * Time.deltaTime;
-        cc.Move(vel);
+        // Vector3 vel = flockSpeed * GetResultant() * Time.deltaTime;
+        // cc.Move(vel);
     }
 
     // Finds all the FlockMembers in a radius around oneself, and sets a list containing all the FlockMember components, as well as 
@@ -66,9 +66,16 @@ public class FlockMember : MonoBehaviour {
         }
     }
 
+    // returns a vector that steers towards a target 
+    private Vector3 targetPos(Vector3 tgt)
+    {
+        Vector3 desPos = tgt - transform.position;
+        desPos = Vector3.Min(desPos, desPos.normalized);
+        return desPos.normalized;
+    }
 
     // get the resultant vector
-    private Vector3 GetResultant()
+    public Vector3 GetResultant()
     {
         List<FlockMember> enemies;
         List<GameObject> otherCols;
@@ -86,7 +93,7 @@ public class FlockMember : MonoBehaviour {
 
 
         // Vector3 resultant = (cohWeight *cohesion + sepWeight * seperation);
-        Vector3 resultant = (GetSepAttr(enemies, otherCols) + randDir);
+        Vector3 resultant = (GetSepAttr(enemies, otherCols));
 
             
         // TODO: rot to deg with allignment
@@ -106,20 +113,24 @@ public class FlockMember : MonoBehaviour {
         {
             total += f.GetComponent<CharacterController>().velocity;
         }
-        return total.normalized;
+        return cc.velocity - total.normalized;
     }
 
-    // get Cohesion comonent for the floc behavior
+  
+    // get Cohesion comonent for the flock behavior
     private Vector3 GetCohesion(List<FlockMember> neighbors)
     {
-        Vector3 total = Vector3.zero;
-        foreach (FlockMember f in neighbors)
+        // if it has no neighbors return zero
+        if (neighbors.Count == 0) return Vector3.zero;
+
+        // get neighbors average possition
+        Vector3 sum = Vector3.zero;
+        foreach (FlockMember fm in neighbors)
         {
-            // sum the direction vectors from the current element
-            Vector3 rawDir = f.transform.position - transform.position;
-            total += Mathf.Pow(rawDir.magnitude, 2) * (rawDir).normalized;
+            sum += fm.transform.position;
         }
-        return total.normalized;
+        Vector3 avg = sum / neighbors.Count;
+        return targetPos(avg);
     }
 
     // get Seperation compontnet for the flock behavior 
@@ -130,7 +141,7 @@ public class FlockMember : MonoBehaviour {
         {
             // sum the direction vectors from the current element
             Vector3 rawDir = transform.position - f.transform.position;
-            total += (Mathf.Pow(rawDir.magnitude + 2, 2)) * (rawDir).normalized;
+            total += rawDir;
            
         }
         foreach (GameObject a in avoid)
@@ -150,7 +161,6 @@ public class FlockMember : MonoBehaviour {
             // sum the direction vectors from the current element
             Vector3 rawDir = f.transform.position - transform.position;
             total += c.Evaluate(rawDir.magnitude / neighborhoodRadius) * (rawDir).normalized;
-
         }
         foreach (GameObject a in avoid)
         {

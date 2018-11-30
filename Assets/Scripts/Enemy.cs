@@ -11,10 +11,18 @@ public class Enemy : MonoBehaviour {
 	private float hp;
 	private CharacterController controller;
 	private bool hit;
+    private FlockMember fm;
+
+    [Tooltip("radius where the enemy will straif to move to its possition")]
+    [SerializeField] float straifRadius = 1;
+
+    [Tooltip("the speed at witch the enemy rotates")]
+    [SerializeField] float rotSpeed = 1;
+
 
     [Tooltip("HP that the enemy starts With")]
     [SerializeField] private float startHp = 100;
-
+        
     PlayerDetails enemyDetails;
 
     // Flocking stuff
@@ -34,6 +42,7 @@ public class Enemy : MonoBehaviour {
 	void Start () {
 		controller = GetComponent<CharacterController>();
         enemyDetails = GetComponentInChildren<PlayerDetails>();
+        fm = GetComponent<FlockMember>();
         hp = startHp;
 		hit = false;
 	}
@@ -45,19 +54,16 @@ public class Enemy : MonoBehaviour {
 		if(hp <= 0) {
 			Death();
 		}
+        Vector3 flockDir = fm.GetResultant();
+        flockDir = Vector3.Min(flockDir, flockDir.normalized);
 		Vector3 moveDir = GetMoveDirection();
-		
-		Vector3 moveVelocity = moveDir * Time.deltaTime * enemySpeed;
 
-		enemyVelocity.x = moveVelocity.x;
-		enemyVelocity.z = moveVelocity.z;
-		enemyVelocity += Physics.gravity * Time.deltaTime;
-		if(controller.isGrounded) {
-			enemyVelocity.y = 0;
-		}
+        Vector3 finalDir = (moveDir + flockDir);
+        GoToTarget(finalDir);
 
-		controller.Move(enemyVelocity);
-	}
+
+
+    }
 	public void UpdatePath(int idx) {
 		
 		Player player = GameManager.Instance.PlayerObj;
@@ -164,46 +170,30 @@ public class Enemy : MonoBehaviour {
         }
     }
 
-
-    // get the resultant vector
-    private Vector3 GetResultant()
+    public Vector3 GoToTarget(Vector3 tgt)
     {
-        List<Enemy> enemies;
-        List<GameObject> otherCols;
-
-        GetNeighborhood(neighborhoodRadius, out enemies, out otherCols);
-
-        Vector3 alignment = GetAlignment(enemies);
-        Vector3 cohesion = GetCohesion(enemies);
-        Vector3 seperation = GetSeperation(enemies, otherCols);
-
-        Vector3 resultant = (alignment + cohesion + seperation);
-        resultant.Normalize();
-
-        return resultant;
-    }
-
-    // get the allignment with its neighboring enemys
-    private Vector3 GetAlignment(List<Enemy> neighbors)
-    {
-        Vector3 total = Vector3.zero;
-        foreach (Enemy e in neighbors)
+        Vector3 curr = transform.forward;
+        Vector3 finalDir;
+        if ((tgt - curr).magnitude <= straifRadius)
         {
-            total += e.GetComponent<CharacterController>().velocity;
+            finalDir = tgt;
         }
-        Vector3 average = total / neighbors.Count;
-        return alignWeight * average;
-    }
+        else
+        {
+            Quaternion rot = Quaternion.RotateTowards(Quaternion.LookRotation(controller.velocity), Quaternion.LookRotation(tgt), rotSpeed);
+            finalDir = rot * Vector3.forward;
+        }
+        Vector3 moveVelocity = finalDir * Time.deltaTime * enemySpeed;
 
-    // get Cohesion comonent for the floc behavior
-    private Vector3 GetCohesion(List<Enemy> neighbors)
-    {
-        return Vector3.zero;
-    }
+        enemyVelocity.x = moveVelocity.x;
+        enemyVelocity.z = moveVelocity.z;
+        enemyVelocity += Physics.gravity * Time.deltaTime;
+        if (controller.isGrounded)
+        {
+            enemyVelocity.y = 0;
+        }
 
-    // get Seperation compontnet for the flock behavior 
-    private Vector3 GetSeperation(List<Enemy> neighbors, List<GameObject> avoid)
-    {
-        return Vector3.zero;
+        controller.Move(enemyVelocity);
+        return enemyVelocity;
     }
 }

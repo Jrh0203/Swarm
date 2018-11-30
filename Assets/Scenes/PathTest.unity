@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerSpeed: 10
+  playerVelocity: {x: 0, y: 0, z: 0}
 --- !u!143 &14719853
 CharacterController:
   m_ObjectHideFlags: 0
@@ -1294,6 +1295,12 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114378658930923596, guid: cbb3094105f9f4d4795e2d832ea5b677,
+        type: 2}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 1125219146448780, guid: 2afa2a7950f6e4a9086c165c0348e4d4,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbb3094105f9f4d4795e2d832ea5b677, type: 2}
   m_IsPrefabAsset: 0

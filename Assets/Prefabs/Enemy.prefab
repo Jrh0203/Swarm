@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 65294767174409066}
   - component: {fileID: 143643283506321242}
   - component: {fileID: 114423804420966108}
+  - component: {fileID: 114710028817294574}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -119,6 +120,72 @@ MonoBehaviour:
   sepWeight: 1
   sepHeavyWeight: 100
   distanceModHeavy: 1
+--- !u!114 &114710028817294574
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1688572442073120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8d20a9be54a1ebb4cb8d835d18c056c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  flockUpdateTime: 0.2
+  flockSpeed: 1
+  noEntryRadius: 1
+  neighborhoodRadius: 10
+  alignWeight: 1
+  cohWeight: 1
+  sepWeight: 1
+  sepHeavyWeight: 100
+  distanceModHeavy: 1
+  target: 2
+  c:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: -0.50141907
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.38958308
+      value: 0
+      inSlope: 0.007093305
+      outSlope: 0.007093305
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.42457312
+    - serializedVersion: 3
+      time: 0.621633
+      value: 0
+      inSlope: 0.0013696209
+      outSlope: 0.0013696209
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.4062832
+    - serializedVersion: 3
+      time: 1
+      value: 0.49858093
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  view: {x: 0, y: 0, z: 0}
+  mag: 0
+  flockLayer: 0
 --- !u!143 &143643283506321242
 CharacterController:
   m_ObjectHideFlags: 1
