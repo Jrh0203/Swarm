@@ -25,18 +25,8 @@ public class Enemy : MonoBehaviour {
         
     PlayerDetails enemyDetails;
 
-    // Flocking stuff
-    [Tooltip("Person space bubble, no one shall enter this radius")]
-    [SerializeField] private float noEntryRadius = 1;
-
-    [Tooltip("radius for gameobjects it should know about")]
-    [SerializeField] private float neighborhoodRadius = 10;
-
-    [SerializeField] private float alignWeight = 1;
-    [SerializeField] private float cohWeight = 1;
-    [SerializeField] private float sepWeight = 1;
-    [SerializeField] private float sepHeavyWeight = 100;
-    [SerializeField] private bool distanceModHeavy = true;
+	//constant for polling rate: increase to improve performance, but decrease rate at which paths are updated.
+	const float minUpdateTime = 1.0f;
 
     // Use this for initialization
 	void Start () {
@@ -45,6 +35,7 @@ public class Enemy : MonoBehaviour {
         fm = GetComponent<FlockMember>();
         hp = startHp;
 		hit = false;
+		StartCoroutine(UpdatePath());
 	}
 	
 	// Update is called once per frame
@@ -60,45 +51,71 @@ public class Enemy : MonoBehaviour {
 
         Vector3 finalDir = (moveDir + flockDir);
         GoToTarget(finalDir);
+	}
 
-
-
-    }
-	public void UpdatePath(int idx) {
-		
+	IEnumerator UpdatePath() {
 		Player player = GameManager.Instance.PlayerObj;
 		Grid grid = GameManager.Instance.GridObj;
-		List<Node> circleSpots = GameManager.Instance.CircleSpotsObj;
-		Vector3[] rPath = grid.FindPath(transform.position, player.transform.position);
-		float bestDist = 100000.0f;
-		Vector3 bestPos = new Vector3(0,0,0);
-		Node bestNode = circleSpots[0];
+
+		float variance = Random.Range(0, minUpdateTime);
+		Node oldPlayerNode = null;
+		while (true) {
+			yield return new WaitForSeconds (variance);
+			//update the path if the player has moved within the last update time
+			Node newPlayerNode = grid.NodeFromWorldPos(player.transform.position);
+			if (oldPlayerNode == null || oldPlayerNode != newPlayerNode) {
+				Node dest = findClosestCircleNode();
+				Vector3 newPos;
+				if(dest != null) {
+					newPos = grid.WorldFromNodeXY(dest.gridX, dest.gridY);
+				} else {
+					newPos = player.transform.position;
+				}
+				PathRequestManager.RequestPath (new PathRequest(transform.position, newPos, OnPathFound));
+				oldPlayerNode = newPlayerNode;
+			}
+			yield return new WaitForSeconds (minUpdateTime - variance);
+		}
+	}
+
+	public Node findClosestCircleNode() {
+		Player player = GameManager.Instance.PlayerObj;
+		Grid grid = GameManager.Instance.GridObj;
+		HashSet<Node> circleSpots = GameManager.Instance.CircleSpotsObj;
+		if(circleSpots.Count <= 0) {
+			return null;
+		}
+
 		int maxCapacity = (int)(GameManager.Instance.EnemiesObj.Count/circleSpots.Count)+1;
-		if (circleSpots.Count>0){
-			foreach (Node n in circleSpots){
-				if (n.capacity<maxCapacity){
-					Vector3 pos = grid.WorldFromNodeXY(n.gridX,n.gridY);
-					float dist = (transform.position-pos).magnitude;
-					if (dist<bestDist){
-						bestDist = dist;
-						bestPos = pos;
-						bestNode = n;
-					}
+		float bestDist = float.MaxValue;
+		Vector3 bestPos;
+		Node bestNode = null;
+		
+		foreach (Node n in circleSpots){
+			if (n.capacity < maxCapacity){
+				Vector3 pos = grid.WorldFromNodeXY(n.gridX, n.gridY);
+				float dist = (transform.position - pos).magnitude;
+				if (dist < bestDist){
+					bestDist = dist;
+					bestPos = pos;
+					bestNode = n;
 				}
 			}
-			bestNode.capacity+=1;
-			
-			rPath = grid.FindPath(transform.position, bestPos);
 		}
-		
-		//
-		
-		if(rPath != null) {
-			path = rPath;
+		if(bestNode != null) {
+			bestNode.capacity++;
+		} else {
+			print("no circle spots" + GameManager.Instance.EnemiesObj.Count + " " + circleSpots.Count + " " + maxCapacity);
+		}
+		return bestNode;
+	}
+
+	public void OnPathFound(Vector3[] path, bool pathFound) {
+		if(pathFound) {
+			this.path = path;
 			targetIndex = 0;
 		} else {
 			print("path not found");
-			print(circleSpots.Count);
 		}
 	}
 	Vector3 GetMoveDirection() {
@@ -152,23 +169,6 @@ public class Enemy : MonoBehaviour {
 		GameManager.Instance.EnemiesObj.Remove(this);
 		Destroy(gameObject);
 	}
-
-    // Finds all the enemys in a radius around oneself, and sets a list containing all the enemy components, as well as 
-    // a list of the other colliders in the neighborhoot
-    private void GetNeighborhood(float radius, out List<Enemy> enemies, out List<GameObject> otherCol)
-    {
-        enemies = new List<Enemy>();
-        otherCol = new List<GameObject>();
-
-        Collider[] hitColliders = Physics.OverlapSphere(transform.position, radius);
-        foreach (Collider c in hitColliders)
-        {
-            GameObject g = c.gameObject;
-            Enemy e = g.GetComponent<Enemy>();
-            if (e != null) enemies.Add(e);
-            else otherCol.Add(g);
-        }
-    }
 
     public Vector3 GoToTarget(Vector3 tgt)
     {

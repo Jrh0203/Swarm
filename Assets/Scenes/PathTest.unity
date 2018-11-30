@@ -398,6 +398,7 @@ GameObject:
   m_Component:
   - component: {fileID: 120131565}
   - component: {fileID: 120131564}
+  - component: {fileID: 120131566}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -429,6 +430,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &120131566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 120131563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4afbd8924d994f4b99371c4b4799d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &140164142
 Prefab:
   m_ObjectHideFlags: 0
@@ -1246,7 +1258,7 @@ Prefab:
     - target: {fileID: 114437008354668024, guid: dc78c8887dcf0ec43afe6e394c920e2f,
         type: 2}
       propertyPath: drawGizmos
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc78c8887dcf0ec43afe6e394c920e2f, type: 2}

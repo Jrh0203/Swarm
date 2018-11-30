@@ -104,7 +104,7 @@ public class TurretShoot : MonoBehaviour {
             new Vector3(0,0,0),
             20,
             GameManager.Instance.PlayerObj.transform.position,
-            GameManager.Instance.PlayerObj.playerVelocity*50
+            GameManager.Instance.PlayerObj.playerVelocity * 50
         );
 
         transform.LookAt(interceptPoint);

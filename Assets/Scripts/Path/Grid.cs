@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class Grid : MonoBehaviour {
-    private int inSightPenalty = 1;
+    private int inSightPenalty = 0;
     public Vector2 gridWorldSize;
     public LayerMask unwalkable;
     public float nodeRadius;
@@ -43,21 +44,26 @@ public class Grid : MonoBehaviour {
         }
     }
 
-    public List<Node> UpdateBattleCircle(){
-    	List<Node> spots = new List<Node>();
-    	//Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
-    	Vector3 direction = new Vector3(1,0,0);
-    	direction = direction*GameManager.Instance.PlayerObj.Range;
+    public HashSet<Node> UpdateBattleCircle(){
+        //reset booleans
+        for(int x = 0; x < gridWidth; x++) {
+            for(int y = 0; y < gridHeight; y++) {
+                grid[x,y].isCircle = false;
+                grid[x,y].capacity = 0;
+            }
+        }
+    	HashSet<Node> spots = new HashSet<Node>();
+    	Vector3 direction = new Vector3(1,0,0) * GameManager.Instance.PlayerObj.Range;
     	int layer_mask = LayerMask.GetMask("Wall");
     	Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
-    	int inc = 3;
+    	int inc = 4;
     	for (int deg = 0; deg < 360; deg+=inc){
     		Quaternion rotation = Quaternion.Euler(0,inc,0);
-			Vector3 myVector = Vector3.one;
 			direction = rotation * direction;
 			RaycastHit hit;
 			Node gridNode = NodeFromWorldPos(fromPosition+direction);
-			if (gridNode.walkable && !Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
+			if (gridNode.walkable && !spots.Contains(gridNode) &&
+             !Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
                 gridNode.isCircle = true;
                 spots.Add(gridNode);
             }
@@ -113,11 +119,12 @@ public class Grid : MonoBehaviour {
         return neighbors;
     }
 
-    public Vector3[] FindPath(Vector3 startPos, Vector3 goalPos) {
+    public void FindPath(PathRequest request, Action<PathResult> callback) {
 		bool foundPath = false;
 		
-		Node startNode = NodeFromWorldPos(startPos);
-		Node goalNode = NodeFromWorldPos(goalPos);
+		Vector3[] waypoints = new Vector3[0];
+		Node startNode = NodeFromWorldPos(request.startPos);
+		Node endNode = NodeFromWorldPos(request.endPos);
 		
 		Heap<Node> openSet = new Heap<Node>(MaxSize);
 		HashSet<Node> closedSet = new HashSet<Node>();
@@ -127,7 +134,7 @@ public class Grid : MonoBehaviour {
 			Node min = openSet.RemoveFirst();
 			closedSet.Add(min);
 
-			if(min == goalNode) {
+			if(min == endNode) {
 				foundPath = true;
 				break;
 			}
@@ -140,7 +147,7 @@ public class Grid : MonoBehaviour {
 				int newDistance = min.gCost + GetDistance(min, neighbor) + ((!neighbor.isCover) ? inSightPenalty : 0);
 				if(neighbor.gCost > newDistance || !openSet.Contains(neighbor)) {
 					neighbor.gCost = newDistance;
-					neighbor.hCost = GetDistance(neighbor, goalNode);
+					neighbor.hCost = GetDistance(neighbor, endNode);
 					neighbor.parent = min;
 					
 					if(!openSet.Contains(neighbor)) {
@@ -152,9 +159,10 @@ public class Grid : MonoBehaviour {
 			}	
 		}
 		if(foundPath) {
-			return RetracePath(startNode, goalNode);;
+			waypoints = RetracePath(startNode, endNode);
+            foundPath = waypoints.Length > 0;
 		}
-		return null;
+		callback.Invoke(new PathResult(waypoints, foundPath, request.callback));
 	}
 
 	
