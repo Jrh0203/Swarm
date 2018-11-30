@@ -398,6 +398,7 @@ GameObject:
   m_Component:
   - component: {fileID: 120131565}
   - component: {fileID: 120131564}
+  - component: {fileID: 120131566}
   m_Layer: 0
   m_Name: GameObject
   m_TagString: Untagged
@@ -429,6 +430,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &120131566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 120131563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4afbd8924d994f4b99371c4b4799d6f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &141247395
 Prefab:
   m_ObjectHideFlags: 0
@@ -467,6 +479,11 @@ Prefab:
     - target: {fileID: 4589651267895988, guid: 2afa2a7950f6e4a9086c165c0348e4d4, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114760967730199340, guid: 2afa2a7950f6e4a9086c165c0348e4d4,
+        type: 2}
+      propertyPath: coolDown
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2afa2a7950f6e4a9086c165c0348e4d4, type: 2}
@@ -1062,8 +1079,14 @@ Prefab:
     - target: {fileID: 114378658930923596, guid: cbb3094105f9f4d4795e2d832ea5b677,
         type: 2}
       propertyPath: waveSize
-      value: 0
+      value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114378658930923596, guid: cbb3094105f9f4d4795e2d832ea5b677,
+        type: 2}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 1125219146448780, guid: 2afa2a7950f6e4a9086c165c0348e4d4,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbb3094105f9f4d4795e2d832ea5b677, type: 2}
   m_IsPrefabAsset: 0

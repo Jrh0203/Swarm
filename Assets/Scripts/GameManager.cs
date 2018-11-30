@@ -16,9 +16,12 @@ public class GameManager : MonoBehaviour {
 	Grid grid;
 	HashSet<Node> circleSpots;
 
+	public static List<GameObject> cubes;
+
 	private Node oldPlayerNode;
 
 	void Awake () {
+		cubes = new List<GameObject>();
 		if(instance != null && instance != this) {
 			Destroy(this.gameObject);
 		} else {
@@ -61,6 +64,15 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		/*
+		GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
+		enemies = new HashSet<Enemy>();
+		foreach(GameObject enemyObj in enemyObjects) {
+			enemies.Add(enemyObj.GetComponent<Enemy>());
+		}
+		*/
+		
 		if(grid != null) {
 			Node newNode = grid.NodeFromWorldPos(player.transform.position);
 			if(oldPlayerNode == null || oldPlayerNode != newNode) {
