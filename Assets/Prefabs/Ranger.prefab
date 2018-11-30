@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33481031700628418}
   - component: {fileID: 23599497409408438}
   - component: {fileID: 65359921109779494}
+  - component: {fileID: 114910284204742958}
   - component: {fileID: 143022797281383546}
   - component: {fileID: 114991747936158354}
   - component: {fileID: 114760967730199340}
@@ -144,6 +145,17 @@ MonoBehaviour:
   view: {x: 0, y: 0, z: 0}
   mag: 0
   flockLayer: 0
+--- !u!114 &114910284204742958
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1125219146448780}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b083d3ddee4cc45f6b65d09c7dc8d324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114991747936158354
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -157,7 +169,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 5
   drawGizmos: 0
-  startHp: 100
+  straifRadius: 1
+  rotSpeed: 1
+  startHp: 20
 --- !u!143 &143022797281383546
 CharacterController:
   m_ObjectHideFlags: 1

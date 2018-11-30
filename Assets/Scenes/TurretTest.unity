@@ -125,6 +125,7 @@ GameObject:
   - component: {fileID: 14719856}
   - component: {fileID: 14719855}
   - component: {fileID: 14719854}
+  - component: {fileID: 14719858}
   - component: {fileID: 14719853}
   - component: {fileID: 14719852}
   m_Layer: 0
@@ -238,6 +239,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &14719858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 14719851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b083d3ddee4cc45f6b65d09c7dc8d324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &49687553
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,11 +491,6 @@ Prefab:
     - target: {fileID: 4589651267895988, guid: 2afa2a7950f6e4a9086c165c0348e4d4, type: 2}
       propertyPath: m_RootOrder
       value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114760967730199340, guid: 2afa2a7950f6e4a9086c165c0348e4d4,
-        type: 2}
-      propertyPath: coolDown
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2afa2a7950f6e4a9086c165c0348e4d4, type: 2}
@@ -828,7 +835,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 114047069408740918, guid: 0be0ecbe3cb78fa41aee35dc4dce71e2, type: 2}
   usingCooldown: 1
-  coolDown: 0.1
+  coolDown: 0.001
 --- !u!65 &940350125
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1085,8 +1092,13 @@ Prefab:
         type: 2}
       propertyPath: enemy
       value: 
-      objectReference: {fileID: 1125219146448780, guid: 2afa2a7950f6e4a9086c165c0348e4d4,
+      objectReference: {fileID: 1688572442073120, guid: 1914d4235b687624682a767f1b238fa7,
         type: 2}
+    - target: {fileID: 114378658930923596, guid: cbb3094105f9f4d4795e2d832ea5b677,
+        type: 2}
+      propertyPath: spawnRate
+      value: 10
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cbb3094105f9f4d4795e2d832ea5b677, type: 2}
   m_IsPrefabAsset: 0

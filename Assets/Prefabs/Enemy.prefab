@@ -22,6 +22,7 @@ GameObject:
   - component: {fileID: 33824834856239390}
   - component: {fileID: 23033586326013790}
   - component: {fileID: 65294767174409066}
+  - component: {fileID: 114385702440154846}
   - component: {fileID: 143643283506321242}
   - component: {fileID: 114423804420966108}
   - component: {fileID: 114710028817294574}
@@ -99,6 +100,17 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114385702440154846
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1688572442073120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b083d3ddee4cc45f6b65d09c7dc8d324, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &114423804420966108
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -112,14 +124,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 5
   drawGizmos: 0
-  startHp: 100
-  noEntryRadius: 1
-  neighborhoodRadius: 10
-  alignWeight: 1
-  cohWeight: 1
-  sepWeight: 1
-  sepHeavyWeight: 100
-  distanceModHeavy: 1
+  straifRadius: 1
+  rotSpeed: 1
+  startHp: 20
 --- !u!114 &114710028817294574
 MonoBehaviour:
   m_ObjectHideFlags: 1
