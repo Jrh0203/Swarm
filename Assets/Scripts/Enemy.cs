@@ -21,12 +21,14 @@ public class Enemy : MonoBehaviour {
 
 
     [Tooltip("HP that the enemy starts With")]
-    [SerializeField] private float startHp = 100;
         
     PlayerDetails enemyDetails;
 
 	//constant for polling rate: increase to improve performance, but decrease rate at which paths are updated.
 	const float minUpdateTime = 1.0f;
+    [SerializeField] private float startHp = 20;
+
+    private Explosion explode;
 
     // Use this for initialization
 	void Start () {
@@ -36,6 +38,7 @@ public class Enemy : MonoBehaviour {
         hp = startHp;
 		hit = false;
 		StartCoroutine(UpdatePath());
+		explode = GetComponent<Explosion>();
 	}
 	
 	// Update is called once per frame
@@ -43,6 +46,7 @@ public class Enemy : MonoBehaviour {
 		hit = false;
 						
 		if(hp <= 0) {
+			explode.explode();
 			Death();
 		}
         Vector3 flockDir = fm.GetResultant();

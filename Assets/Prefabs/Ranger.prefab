@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 114760967730199340}
   - component: {fileID: 114902449298718322}
   m_Layer: 0
-  m_Name: Enemy 1
+  m_Name: Ranger
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -158,13 +158,6 @@ MonoBehaviour:
   enemySpeed: 5
   drawGizmos: 0
   startHp: 100
-  noEntryRadius: 1
-  neighborhoodRadius: 10
-  alignWeight: 1
-  cohWeight: 1
-  sepWeight: 1
-  sepHeavyWeight: 100
-  distanceModHeavy: 1
 --- !u!143 &143022797281383546
 CharacterController:
   m_ObjectHideFlags: 1
