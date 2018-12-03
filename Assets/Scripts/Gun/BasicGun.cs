@@ -42,6 +42,13 @@ public class BasicGun : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         shotTimer += Time.deltaTime;
+
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            setGunType(GunType.BasicGun);
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            setGunType(GunType.Shotgun);
+        }
 	}
 
     // method to shoot a bullet
