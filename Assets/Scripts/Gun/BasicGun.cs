@@ -18,7 +18,7 @@ public class BasicGun : MonoBehaviour {
     [SerializeField] private float initialCoolDown = .1f;
     private float coolDown;
 
-    public enum GunType {BasicGun, Shotgun};
+    public enum GunType {BasicGun, Shotgun, Sniper};
     [SerializeField] GunType startingGun = GunType.BasicGun;
     private GunType gunType;
     private float shotTimer;
@@ -49,6 +49,9 @@ public class BasicGun : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha2)) {
             setGunType(GunType.Shotgun);
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            setGunType(GunType.Sniper);
+        }
 	}
 
     // method to shoot a bullet
@@ -59,6 +62,9 @@ public class BasicGun : MonoBehaviour {
             switch (gunType) {
                 case GunType.Shotgun:
                     ShootShotgun();
+                    break;
+                case GunType.Sniper:
+                    ShootSniper();
                     break;
                 case GunType.BasicGun:
                 default:
@@ -93,11 +99,23 @@ public class BasicGun : MonoBehaviour {
         }
     }
 
+    public void ShootSniper() {
+        // Increased damage/speed
+        int modifier = 3;
+        Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
+        Bullet b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
+        b.setDamage(b.getDamage() * modifier);
+        b.setSpeed(b.getSpeed() * modifier); 
+    }
+
     public void setGunType(GunType gun) {
         gunType = gun;
         switch (gunType) {
             case GunType.Shotgun:
                 coolDown = initialCoolDown * 5;
+                break;
+            case GunType.Sniper:
+                coolDown = initialCoolDown * 8;
                 break;
             case GunType.BasicGun:
             default:
