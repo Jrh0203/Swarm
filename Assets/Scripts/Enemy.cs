@@ -11,17 +11,34 @@ public class Enemy : MonoBehaviour {
 	private float hp;
 	private CharacterController controller;
 	private bool hit;
+    private FlockMember fm;
+
+    [Tooltip("radius where the enemy will straif to move to its possition")]
+    [SerializeField] float straifRadius = 1;
+
+    [Tooltip("the speed at witch the enemy rotates")]
+    [SerializeField] float rotSpeed = 1;
+
+
+    [Tooltip("HP that the enemy starts With")]
+        
+    PlayerDetails enemyDetails;
+
 	//constant for polling rate: increase to improve performance, but decrease rate at which paths are updated.
 	const float minUpdateTime = 1.0f;
-    [Tooltip("HP that the enemy starts With")]
-    [SerializeField] private float startHp = 100;
+    [SerializeField] private float startHp = 20;
+
+    private Explosion explode;
 
     // Use this for initialization
 	void Start () {
 		controller = GetComponent<CharacterController>();
+        enemyDetails = GetComponentInChildren<PlayerDetails>();
+        fm = GetComponent<FlockMember>();
         hp = startHp;
 		hit = false;
 		StartCoroutine(UpdatePath());
+		explode = GetComponent<Explosion>();
 	}
 	
 	// Update is called once per frame
@@ -29,21 +46,17 @@ public class Enemy : MonoBehaviour {
 		hit = false;
 						
 		if(hp <= 0) {
+			explode.explode();
 			Death();
 		}
+        Vector3 flockDir = fm.GetResultant();
+        flockDir = Vector3.Min(flockDir, flockDir.normalized);
 		Vector3 moveDir = GetMoveDirection();
-		
-		Vector3 moveVelocity = moveDir * Time.deltaTime * enemySpeed;
 
-		enemyVelocity.x = moveVelocity.x;
-		enemyVelocity.z = moveVelocity.z;
-		enemyVelocity += Physics.gravity * Time.deltaTime;
-		if(controller.isGrounded) {
-			enemyVelocity.y = 0;
-		}
-
-		controller.Move(enemyVelocity);
+        Vector3 finalDir = (moveDir + flockDir);
+        GoToTarget(finalDir);
 	}
+
 	IEnumerator UpdatePath() {
 		Player player = GameManager.Instance.PlayerObj;
 		Grid grid = GameManager.Instance.GridObj;
@@ -160,4 +173,31 @@ public class Enemy : MonoBehaviour {
 		GameManager.Instance.EnemiesObj.Remove(this);
 		Destroy(gameObject);
 	}
+
+    public Vector3 GoToTarget(Vector3 tgt)
+    {
+        Vector3 curr = transform.forward;
+        Vector3 finalDir;
+        if ((tgt - curr).magnitude <= straifRadius)
+        {
+            finalDir = tgt;
+        }
+        else
+        {
+            Quaternion rot = Quaternion.RotateTowards(Quaternion.LookRotation(controller.velocity), Quaternion.LookRotation(tgt), rotSpeed);
+            finalDir = rot * Vector3.forward;
+        }
+        Vector3 moveVelocity = finalDir * Time.deltaTime * enemySpeed;
+
+        enemyVelocity.x = moveVelocity.x;
+        enemyVelocity.z = moveVelocity.z;
+        enemyVelocity += Physics.gravity * Time.deltaTime;
+        if (controller.isGrounded)
+        {
+            enemyVelocity.y = 0;
+        }
+
+        controller.Move(enemyVelocity);
+        return enemyVelocity;
+    }
 }

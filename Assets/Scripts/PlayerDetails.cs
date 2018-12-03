@@ -32,7 +32,7 @@ public class PlayerDetails : MonoBehaviour {
 	void Update () {
 
         // face canvas towards the camera
-        transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.back,
+        transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.forward,
             mainCamera.transform.rotation * Vector3.up);
 
         // healthbar 

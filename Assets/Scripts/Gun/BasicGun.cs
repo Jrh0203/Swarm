@@ -8,7 +8,7 @@ public class BasicGun : MonoBehaviour {
     private const float BULLET_OVERHEAD = 0.25f;
 
     [Tooltip("Type of bullet we will use")]
-    [SerializeField]private Bullet bullet;
+    [SerializeField]private GameObject bullet;
     private Collider c;
 
     [Tooltip("Are you using a cooldown between shots?")]
@@ -36,7 +36,7 @@ public class BasicGun : MonoBehaviour {
         if (!usingCooldown || shotTimer >= coolDown)
         {
             Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
-            Bullet b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
+            GameObject b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
             shotTimer = 0;
             return true;
         } 

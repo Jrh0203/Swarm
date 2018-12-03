@@ -13,6 +13,8 @@ public class EnemyWaveSpawner : MonoBehaviour {
     [Tooltip("enemy to spawn")]
     [SerializeField] private GameObject enemy;
 
+    
+
     [HideInInspector] public bool spawnEnabled;
 
     // Use this for initialization
