@@ -15,7 +15,7 @@ public class Bullet : MonoBehaviour {
     private float currentTime;
     private Rigidbody rB;
 
-    private float bulletDamage;
+    private float bulletDamage = 10.0f;
 
     // used when object is awoken
     private void Awake()
@@ -25,7 +25,6 @@ public class Bullet : MonoBehaviour {
         currentTime = 0;
 
         rB.velocity = transform.forward * shootSpeed;
-        bulletDamage = 10.0f;
     }
 	
 	// Update is called once per frame
@@ -34,9 +33,6 @@ public class Bullet : MonoBehaviour {
         // check lifetime
         currentTime += Time.deltaTime;
         if (currentTime >= lifeTime) Seppuku();
-
-        // 
-
 	}
 
     // Method that destroys the bullet
@@ -45,9 +41,26 @@ public class Bullet : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    public void setDamage(float damage) {
+        bulletDamage = damage;
+    }
+
+    public void setSpeed(float speed) {
+        shootSpeed = speed;
+        rB.velocity = transform.forward * shootSpeed;
+        // if (rB.velocity.magnitude > 80) {
+        //     rB.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+        // }
+    }
+
     public float getDamage() {
         return bulletDamage;
     }
+
+    public float getSpeed() {
+        return shootSpeed;
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         if (dieOnCol) Seppuku();
