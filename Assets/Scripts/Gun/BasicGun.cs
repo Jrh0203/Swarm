@@ -15,26 +15,28 @@ public class BasicGun : MonoBehaviour {
     [SerializeField] private bool usingCooldown = true;
 
     [Tooltip("How many secounds between each shot")]
-    [SerializeField] private float coolDown = .1f;
+    [SerializeField] private float initialCoolDown = .1f;
+    private float coolDown;
 
-    enum GunType {BasicGun, Shotgun};
+    public enum GunType {BasicGun, Shotgun};
     [SerializeField] GunType startingGun = GunType.BasicGun;
     private GunType gunType;
     private float shotTimer;
 
 
     // Shotgun Fields
-    int shotgunBulletCount;
+    [Range(2, 20)]
+    [SerializeField] int shotgunBulletCount = 4;
     //Bullet spread in degrees from center line
-    float shotgunBulletSpread;
+    [Range(0.0f, 180.0f)]
+    [SerializeField] float shotgunBulletSpread = 45.0f;
          
 	// Use this for initialization
 	void Start () {
         c = GetComponent<BoxCollider>();
-        shotTimer = coolDown;
-        gunType = startingGun;
-        shotgunBulletCount = 8;
-        shotgunBulletSpread = 45.0f;
+        shotTimer = initialCoolDown;
+        coolDown = initialCoolDown;
+        setGunType(startingGun);
 	}
 	
 	// Update is called once per frame
@@ -71,17 +73,29 @@ public class BasicGun : MonoBehaviour {
     }
 
     public void ShootShotgun() {
-        Debug.Log("Shooting Shotgun");
         Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
 
         float degreesBetweenBullets = (shotgunBulletSpread / (shotgunBulletCount - 1)) * 2;
         if (shotgunBulletCount == 1) degreesBetweenBullets = 0.0f;
+
         for (int i=0; i < shotgunBulletCount; i++) {
             float bulletDegrees = -shotgunBulletSpread + i * degreesBetweenBullets;
             if (bulletDegrees <= 0) bulletDegrees += 360.0f; 
             Quaternion direction = transform.rotation * Quaternion.AngleAxis(bulletDegrees, Vector3.up);
             Bullet b = Instantiate(bullet, transform.position + direction * barrelOffset * 2, direction);
-            Debug.Log("Bullet" + i + " rotation = " + b.transform.forward);
+        }
+    }
+
+    public void setGunType(GunType gun) {
+        gunType = gun;
+        switch (gunType) {
+            case GunType.Shotgun:
+                coolDown = initialCoolDown * 5;
+                break;
+            case GunType.BasicGun:
+            default:
+                coolDown = initialCoolDown;
+                break;
         }
     }
 }
