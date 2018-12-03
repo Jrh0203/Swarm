@@ -42,11 +42,16 @@ public class FlockMember : MonoBehaviour {
         // chosen direction
         randDir = (new Vector3((Random.value - .5f) * Time.deltaTime, (Random.value - .5f) * Time.deltaTime, (Random.value - .5f) * Time.deltaTime)).normalized;
     }
-	
-	// Update is called once per frame
-	void Update () {
-        // Vector3 vel = flockSpeed * GetResultant() * Time.deltaTime;
-        // cc.Move(vel);
+
+    private void Start()
+    {
+        //cc.Move(Vector3.forward);
+    }
+
+    // Update is called once per frame
+    void Update () {
+        //Vector3 vel = flockSpeed * GetResultant() * Time.deltaTime;
+        //cc.Move(vel);
     }
 
     // Finds all the FlockMembers in a radius around oneself, and sets a list containing all the FlockMember components, as well as 
@@ -62,7 +67,7 @@ public class FlockMember : MonoBehaviour {
             GameObject g = c.gameObject;
             FlockMember f = g.GetComponent<FlockMember>();
             if (f != null) enemies.Add(f);
-            else otherCol.Add(g);
+            else if (g.transform.tag != "Ground") otherCol.Add(g);
         }
     }
 
@@ -81,19 +86,16 @@ public class FlockMember : MonoBehaviour {
         List<GameObject> otherCols;
 
         GetNeighborhood(neighborhoodRadius, out enemies, out otherCols);
-
+        if (enemies.Count == 0) return cc.velocity;
         Vector3 alignment = GetAlignment(enemies);
-        // Vector3 cohesion = GetCohesion(enemies);
-        //  Vector3 seperation = GetSeperation(enemies, otherCols);
+        Vector3 cohesion = GetCohesion(enemies);
+        Vector3 seperation = GetSeperation(enemies, otherCols);
+         
 
 
-
-        // Debug.Log("cohesion = " + cohesion + " | seperation = " + seperation + " | there sum = " + (cohesion + seperation));
-        // Debug.Log("cohesions mag = " + cohesion.magnitude + " | serpations mag = " + seperation.magnitude);
-
-
-        // Vector3 resultant = (cohWeight *cohesion + sepWeight * seperation);
-        Vector3 resultant = (GetSepAttr(enemies, otherCols));
+        Vector3 resultant = (cohWeight *cohesion + sepWeight * seperation + alignWeight * alignment );
+        resultant.Normalize();
+        // Vector3 resultant = (GetSepAttr(enemies, otherCols));
 
             
         // TODO: rot to deg with allignment
@@ -148,7 +150,7 @@ public class FlockMember : MonoBehaviour {
         {
             // sum the direction vectors from the current element
 
-            // total += a.transform.position - transform.position;
+            total += transform.position - a.transform.position;
         }                                                                                               
         return total.normalized;
     }

@@ -113,7 +113,7 @@ MonoBehaviour:
   flockSpeed: 30
   noEntryRadius: 1
   neighborhoodRadius: 20
-  alignWeight: 0
+  alignWeight: 2
   cohWeight: 2
   sepWeight: 2
   sepHeavyWeight: 100
