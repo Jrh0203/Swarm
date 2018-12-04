@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class MainMenuButton : MonoBehaviour {
+public class ToLevelSelect : MonoBehaviour {
 	public Button play;
 	// Use this for initialization
 	void Start () {
@@ -14,5 +14,6 @@ public class MainMenuButton : MonoBehaviour {
 	
 	void OpenLevelSelect() {
 		SceneManager.LoadScene("LevelSelect");
+		Time.timeScale = 1;
 	}
 }

@@ -11,10 +11,11 @@ public class Player : MonoBehaviour {
     //gun stuff
     private BasicGun gun;
     private bool shot = false;
-	private float hp = 100;
+	public float hp = 100;
+	public float maxHp = 100;
 
 	private float range = 20;
-
+	private bool hit;
 	public float Range {
 		get {
 			return range;
@@ -25,8 +26,19 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	public float Hp {
+		get {
+			return hp;
+		}
+
+		set {
+			hp = value;
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
+		hit = false;
 		controller = GetComponent<CharacterController>();
 		playerVelocity = new Vector3(0, 0, 0);
         gun = GetComponentInChildren<BasicGun>();
@@ -34,6 +46,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		hit = false;
 		Vector3 moveDir = GetMoveDirection();
 		Vector3 moveVelocity = moveDir * Time.deltaTime * playerSpeed;
 		
@@ -73,7 +86,18 @@ public class Player : MonoBehaviour {
 		return Vector3.Normalize(new Vector3(newDir.x, 0, newDir.y));
 	}
 
-	public void hit(float damage) {
-		hp -= damage;
+	public void hurt(float damage) {
+		if(!hit) {
+			hit = true;
+			hp = Mathf.Clamp(hp - damage, 0, hp);
+		}
 	}
+
+	void OnTriggerEnter(Collider collider) {
+        if(collider.gameObject.layer == LayerMask.NameToLayer("Bullet")) {
+			Bullet b = collider.gameObject.GetComponent<Bullet>();
+			hurt(b.getDamage());
+			b.Seppuku();	
+		}
+    }
 }

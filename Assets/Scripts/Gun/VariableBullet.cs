@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour {
+public class VariableBullet : MonoBehaviour
+{
     [Tooltip("The lifetime in ms of a bullet")]
     [SerializeField] private float lifeTime = 100;
 
@@ -12,10 +13,13 @@ public class Bullet : MonoBehaviour {
     [Tooltip("Does the bullet die on collision?")]
     [SerializeField] private bool dieOnCol = true;
 
+    [Tooltip("Function of velocity")]
+    [SerializeField] private AnimationCurve c;
+
     private float currentTime;
     private Rigidbody rB;
 
-    private float bulletDamage = 10.0f;
+    private float bulletDamage;
 
     // used when object is awoken
     private void Awake()
@@ -24,40 +28,32 @@ public class Bullet : MonoBehaviour {
         // use awake instead of start in case we want to use a bullet pool
         currentTime = 0;
 
-        rB.velocity = transform.forward * shootSpeed;
+        bulletDamage = 10.0f;
     }
-	
-	// Update is called once per frame
-	void Update ()
+
+    // Update is called once per frame
+    void Update()
     {
+        rB.velocity = transform.forward * shootSpeed * c.Evaluate(currentTime / lifeTime);
         // check lifetime
         currentTime += Time.deltaTime;
         if (currentTime >= lifeTime) Seppuku();
-	}
+
+        // 
+
+    }
 
     // Method that destroys the bullet
     public void Seppuku()
     {
+        Debug.Log("sepuk");
         Destroy(gameObject);
     }
 
-    public void setDamage(float damage) {
-        bulletDamage = damage;
-    }
-
-    public void setSpeed(float speed) {
-        shootSpeed = speed;
-        rB.velocity = transform.forward * shootSpeed;
-    }
-
-    public float getDamage() {
+    public float getDamage()
+    {
         return bulletDamage;
     }
-
-    public float getSpeed() {
-        return shootSpeed;
-    }
-
     void OnTriggerEnter(Collider collider)
     {
         if (dieOnCol) Seppuku();

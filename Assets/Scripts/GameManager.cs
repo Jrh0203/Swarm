@@ -3,8 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-	private static GameManager instance;
+	public bool defeat;
+	public bool victory;
 
+	private bool isPaused;
+	private static GameManager instance;
+	public GameObject defeatPrefab;
+	public GameObject victoryPrefab;
 	public static GameManager Instance {
 		get {
 			return instance;
@@ -15,16 +20,23 @@ public class GameManager : MonoBehaviour {
 	Player player;
 	Grid grid;
 	HashSet<Node> circleSpots;
+	Canvas hud;
+
+	public static List<GameObject> cubes;
 
 	private Node oldPlayerNode;
 
 	void Awake () {
+		isPaused = false;
+		defeat = false;
+		victory = false;
+		cubes = new List<GameObject>();
 		if(instance != null && instance != this) {
 			Destroy(this.gameObject);
 		} else {
 			instance = this;
 		}
-		
+		hud = GameObject.FindGameObjectWithTag("HUD").GetComponent<Canvas>();
 		GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
 		enemies = new HashSet<Enemy>();
 		foreach(GameObject enemyObj in enemyObjects) {
@@ -61,6 +73,9 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(player.hp <= 0) {
+			defeat = true;
+		}
 		if(grid != null) {
 			Node newNode = grid.NodeFromWorldPos(player.transform.position);
 			if(oldPlayerNode == null || oldPlayerNode != newNode) {
@@ -69,6 +84,18 @@ public class GameManager : MonoBehaviour {
 				oldPlayerNode = newNode;
 				//grid.UpdateCover();
 			}
+		}
+	}
+
+	void OnGUI() {
+		if(victory && !isPaused) {
+			Time.timeScale = 0;
+			Instantiate(victoryPrefab, new Vector3(Screen.width * .5f, 0, Screen.height * .5f), Quaternion.identity, hud.transform);
+			isPaused = true;
+		} else if (defeat && !isPaused){
+			Time.timeScale = 0;
+			Instantiate(defeatPrefab, new Vector3(Screen.width * .5f, Screen.height * .5f, 0), Quaternion.identity, hud.transform);
+			isPaused = true;
 		}
 	}
 }

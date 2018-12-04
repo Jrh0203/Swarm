@@ -8,7 +8,7 @@ public class BasicGun : MonoBehaviour {
     private const float BULLET_OVERHEAD = 0.25f;
 
     [Tooltip("Type of bullet we will use")]
-    [SerializeField]private Bullet bullet;
+    [SerializeField]private GameObject bullet;
     private Collider c;
 
     [Tooltip("Are you using a cooldown between shots?")]
@@ -82,7 +82,7 @@ public class BasicGun : MonoBehaviour {
 
     public void ShootBasicGun() {
         Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
-        Bullet b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
+        GameObject b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
     }
 
     public void ShootShotgun() {
@@ -95,7 +95,7 @@ public class BasicGun : MonoBehaviour {
             float bulletDegrees = -shotgunBulletSpread + i * degreesBetweenBullets;
             if (bulletDegrees <= 0) bulletDegrees += 360.0f; 
             Quaternion direction = transform.rotation * Quaternion.AngleAxis(bulletDegrees, Vector3.up);
-            Bullet b = Instantiate(bullet, transform.position + direction * barrelOffset * 2, direction);
+            GameObject b = Instantiate(bullet, transform.position + direction * barrelOffset * 2, direction);
         }
     }
 
@@ -103,9 +103,7 @@ public class BasicGun : MonoBehaviour {
         // Increased damage/speed
         int modifier = 3;
         Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
-        Bullet b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
-        b.setDamage(b.getDamage() * modifier);
-        b.setSpeed(b.getSpeed() * modifier); 
+        GameObject b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
     }
 
     public void setGunType(GunType gun) {
