@@ -11,6 +11,8 @@ public class BasicGun : MonoBehaviour {
     [SerializeField]private GameObject bullet;
     private Collider c;
 
+    private LineRenderer lRend;
+
     [Tooltip("Are you using a cooldown between shots?")]
     [SerializeField] private bool usingCooldown = true;
 
@@ -34,6 +36,10 @@ public class BasicGun : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         c = GetComponent<BoxCollider>();
+
+        lRend = GetComponent<LineRenderer>();
+        lRend.material = new Material (Shader.Find("Particles/Additive"));
+
         shotTimer = initialCoolDown;
         coolDown = initialCoolDown;
         setGunType(startingGun);
@@ -52,6 +58,12 @@ public class BasicGun : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.Alpha3)) {
             setGunType(GunType.Sniper);
         }
+
+        // Fading out sniper shots
+        Color shotColor = lRend.startColor;
+        shotColor.a -= 0.03f;
+        lRend.startColor = shotColor;
+        lRend.endColor = shotColor;
 	}
 
     // method to shoot a bullet
@@ -86,6 +98,7 @@ public class BasicGun : MonoBehaviour {
     }
 
     public void ShootShotgun() {
+        float shotgunBulletLifetime = 1.0f;
         Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
 
         float degreesBetweenBullets = (shotgunBulletSpread / (shotgunBulletCount - 1)) * 2;
@@ -96,14 +109,27 @@ public class BasicGun : MonoBehaviour {
             if (bulletDegrees <= 0) bulletDegrees += 360.0f; 
             Quaternion direction = transform.rotation * Quaternion.AngleAxis(bulletDegrees, Vector3.up);
             GameObject b = Instantiate(bullet, transform.position + direction * barrelOffset * 2, direction);
+            b.GetComponent<Bullet>().SetLifeTime(shotgunBulletLifetime);
         }
     }
 
     public void ShootSniper() {
-        // Increased damage/speed
-        int modifier = 3;
-        Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
-        GameObject b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
+        float sniperDamage = 70.0f;
+        
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity)) {
+            if (hit.collider.gameObject.tag == "Enemy") {
+                Enemy e = hit.collider.gameObject.GetComponent<Enemy>();
+                e.TakeDamage(sniperDamage);
+            }
+        }
+        float rayDistance = (hit.distance == 0) ? 1000 : hit.distance;
+        lRend.SetPosition(0, transform.position);
+        lRend.SetPosition(1, transform.position + transform.TransformDirection(Vector3.forward) * rayDistance);
+        Color lineColor = Color.white;
+        lineColor.a = 255.0f;
+        lRend.startColor = lineColor;
+        lRend.endColor = lineColor;
     }
 
     public void setGunType(GunType gun) {

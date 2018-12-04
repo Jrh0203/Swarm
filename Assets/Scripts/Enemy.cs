@@ -200,4 +200,8 @@ public class Enemy : MonoBehaviour {
         controller.Move(enemyVelocity);
         return enemyVelocity;
     }
+
+	public void TakeDamage(float damage) {
+		hp -= damage;
+	}
 }
