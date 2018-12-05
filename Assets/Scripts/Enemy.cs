@@ -155,7 +155,7 @@ public class Enemy : MonoBehaviour {
 	void OnTriggerEnter(Collider collider) {
 		if(collider.gameObject.tag == "Player") {
 			Player p = collider.gameObject.GetComponent<Player>();
-			p.hit(10.0f);
+			p.hurt(10.0f);
 			Death();	
 		}
         if(collider.gameObject.layer == LayerMask.NameToLayer("Bullet")) {
@@ -200,4 +200,8 @@ public class Enemy : MonoBehaviour {
         controller.Move(enemyVelocity);
         return enemyVelocity;
     }
+
+	public void TakeDamage(float damage) {
+		hp -= damage;
+	}
 }

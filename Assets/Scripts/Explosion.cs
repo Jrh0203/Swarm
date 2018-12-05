@@ -8,6 +8,7 @@ public class Explosion : MonoBehaviour {
     private float cubeSize = 0.2f;
     private int cubesInRow = 5;
     private static int maxDeathCubes = 1000;
+    public GameObject enemyBit;
 
     float cubesPivotDistance;
     Vector3 cubesPivot;
@@ -78,28 +79,14 @@ public class Explosion : MonoBehaviour {
     }
 
     void createPiece(int x, int y, int z) {
-
-        //create piece
-        GameObject piece;
-        piece = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        piece.GetComponent<Renderer>().material.color = new Color(1,0,0,1);
-
         //set piece position and scale
-        piece.transform.position = transform.position + new Vector3(cubeSize * x, cubeSize * y, cubeSize * z) - cubesPivot;
-        piece.transform.localScale = new Vector3(cubeSize, cubeSize, cubeSize);
-
-        //add rigidbody and set mass
-        piece.AddComponent<Rigidbody>();
-        piece.GetComponent<Rigidbody>().mass = cubeSize;
-        
+        GameObject piece = Instantiate(enemyBit, transform.position + new Vector3(cubeSize * x, cubeSize * y, cubeSize * z) - cubesPivot, Quaternion.identity);
+        GameManager.cubes.Add(piece);
         if (GameManager.cubes.Count>maxDeathCubes){
-            
             GameObject temp = GameManager.cubes[0];
             GameManager.cubes.RemoveAt(0);
             Destroy(temp);
         }
-        
-        GameManager.cubes.Add(piece);
     }
 
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class LevelButton : MonoBehaviour {
+public class ToLevel : MonoBehaviour {
 	public int levelNumber = 0;
 	public Button level;
 	// Use this for initialization

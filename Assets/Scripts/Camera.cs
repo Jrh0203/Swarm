@@ -9,7 +9,7 @@ public class Camera : MonoBehaviour {
     //relative to the player
     private Vector3 cameraDistVect;
 	private float smoothSpeed = .075f;
-    public const int DEFAULT_CAMERA_DIST = 30;
+    public int DEFAULT_CAMERA_DIST = 50;
 	// Use this for initialization
 	void Start () {
         //move the camera away from the player in the same direction it faces.
