@@ -117,7 +117,8 @@ public class BasicGun : MonoBehaviour {
         float sniperDamage = 70.0f;
         
         RaycastHit hit;
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity)) {
+        LayerMask mask = LayerMask.GetMask("Enemy");
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, mask)) {
             if (hit.collider.gameObject.tag == "Enemy") {
                 Enemy e = hit.collider.gameObject.GetComponent<Enemy>();
                 e.TakeDamage(sniperDamage);
