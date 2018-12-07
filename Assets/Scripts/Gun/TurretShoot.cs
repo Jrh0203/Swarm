@@ -113,8 +113,11 @@ public class TurretShoot : MonoBehaviour {
             transform.eulerAngles.y,
             0
         );
+
+        Grid grid = GameManager.Instance.GridObj;
+        Node n = grid.NodeFromWorldPos(fromPosition);
         shotTimer += Time.deltaTime;
-        if (shotTimer>coolDown){
+        if (shotTimer>coolDown && n.isCover == false){
         	Shoot();
         }
 	}

@@ -14,7 +14,7 @@ public class Player : MonoBehaviour {
 	public float hp = 100;
 	public float maxHp = 100;
 
-	private float range = 20;
+	private float range = 18;
 	private bool hit;
 	public float Range {
 		get {

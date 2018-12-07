@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour {
 		if(grid != null) {
 			Node newNode = grid.NodeFromWorldPos(player.transform.position);
 			if(oldPlayerNode == null || oldPlayerNode != newNode) {
-				//grid.UpdateCover();
+				grid.UpdateCover();
 				circleSpots = grid.UpdateBattleCircle();
 				oldPlayerNode = newNode;
 				//grid.UpdateCover();
