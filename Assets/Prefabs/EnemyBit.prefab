@@ -23,7 +23,7 @@ GameObject:
   - component: {fileID: 23493092145318866}
   - component: {fileID: 65437076669816682}
   - component: {fileID: 54786429622066760}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: EnemyBit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
