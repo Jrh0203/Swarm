@@ -117,7 +117,7 @@ public class BasicGun : MonoBehaviour {
         float sniperDamage = 70.0f;
         
         RaycastHit hit;
-        LayerMask mask = LayerMask.GetMask("Enemy");
+        LayerMask mask = LayerMask.GetMask("Enemy") | LayerMask.GetMask("Wall");
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, mask)) {
             if (hit.collider.gameObject.tag == "Enemy") {
                 Enemy e = hit.collider.gameObject.GetComponent<Enemy>();
@@ -134,6 +134,8 @@ public class BasicGun : MonoBehaviour {
     }
 
     public void setGunType(GunType gun) {
+        Camera cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
+        cam.SetSniperView(false);
         gunType = gun;
         switch (gunType) {
             case GunType.Shotgun:
@@ -141,6 +143,7 @@ public class BasicGun : MonoBehaviour {
                 break;
             case GunType.Sniper:
                 coolDown = initialCoolDown * 8;
+                cam.SetSniperView(true);
                 break;
             case GunType.BasicGun:
             default:
