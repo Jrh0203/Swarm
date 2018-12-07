@@ -94,7 +94,7 @@ public class BasicGun : MonoBehaviour {
 
     public void ShootBasicGun() {
         Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
-        GameObject b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
+        GameObject b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset*2, transform.rotation);
     }
 
     public void ShootShotgun() {
@@ -108,7 +108,7 @@ public class BasicGun : MonoBehaviour {
             float bulletDegrees = -shotgunBulletSpread + i * degreesBetweenBullets;
             if (bulletDegrees <= 0) bulletDegrees += 360.0f; 
             Quaternion direction = transform.rotation * Quaternion.AngleAxis(bulletDegrees, Vector3.up);
-            GameObject b = Instantiate(bullet, transform.position + direction * barrelOffset * 2, direction);
+            GameObject b = Instantiate(bullet, transform.position + direction * barrelOffset * 1.5f, direction);
             b.GetComponent<Bullet>().SetLifeTime(shotgunBulletLifetime);
         }
     }

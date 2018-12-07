@@ -27,9 +27,12 @@ public class Grid : MonoBehaviour {
                 grid[x,y].capacity = 0;
                 Vector3 toPosition = WorldFromNodeXY(x,y);
                 Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
-                if(Vector3.Distance(toPosition, fromPosition) < GameManager.Instance.PlayerObj.Range) {
+                Vector3 direction = toPosition - fromPosition;
+                
+                Vector3 toScaled = Vector3.Scale(direction, new Vector3(.7f, 1, 1));
+                if(toScaled.magnitude < GameManager.Instance.PlayerObj.Range) {
                     RaycastHit hit;
-                    Vector3 direction = toPosition - fromPosition;
+                    
                     int layer_mask = LayerMask.GetMask("Wall");
                     
                     if (Physics.Raycast (fromPosition, direction, out hit, direction.magnitude,layer_mask)) {
