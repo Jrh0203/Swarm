@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour {
 		} else {
 			instance = this;
 		}
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 		hud = GameObject.FindGameObjectWithTag("HUD").GetComponent<Canvas>();
 		GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
 		enemies = new HashSet<Enemy>();
@@ -43,7 +44,6 @@ public class GameManager : MonoBehaviour {
 			enemies.Add(enemyObj.GetComponent<Enemy>());
 		}
 		circleSpots = new HashSet<Node>();
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 		grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
 	}
 
