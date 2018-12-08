@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 	public bool defeat;
 	public bool victory;
+	public int remainingEnemies;
 
 	private bool isPaused;
 	private static GameManager instance;
@@ -50,6 +51,12 @@ public class GameManager : MonoBehaviour {
 	public Player PlayerObj {
 		get {
 			return player;
+		}
+	}
+
+	public int EnemiesLeft {
+		get {
+			return remainingEnemies;
 		}
 	}
 
