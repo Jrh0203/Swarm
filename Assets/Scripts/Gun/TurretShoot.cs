@@ -20,6 +20,7 @@ public class TurretShoot : MonoBehaviour {
     [Tooltip("How many secounds between each shot")]
     [SerializeField] private float coolDown = .1f;
 
+    public bool doShoot = true;
     private float shotTimer;
          
 	// Use this for initialization
@@ -132,7 +133,7 @@ public class TurretShoot : MonoBehaviour {
             0
         );
         shotTimer += Time.deltaTime;
-        if (shotTimer>coolDown){
+        if (doShoot && shotTimer>coolDown){
         	Shoot();
         }
 	}
