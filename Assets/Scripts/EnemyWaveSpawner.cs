@@ -32,7 +32,7 @@ public class EnemyWaveSpawner : MonoBehaviour {
     {
         while (true) {
             if (spawnEnabled) { 
-                for (int i = 0; i <= waveSize; i++) {
+                for (int i = 0; i < waveSize; i++) {
                     Instantiate(enemy, transform.position + new Vector3(i * 5, 0, 0), transform.rotation);
                 }
             }

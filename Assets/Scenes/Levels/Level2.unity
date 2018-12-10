@@ -122,7 +122,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4391381659019234, guid: cbb3094105f9f4d4795e2d832ea5b677, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -9.920385
+      value: -19.8
       objectReference: {fileID: 0}
     - target: {fileID: 4391381659019234, guid: cbb3094105f9f4d4795e2d832ea5b677, type: 2}
       propertyPath: m_LocalPosition.y
@@ -346,7 +346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defeat: 0
   victory: 0
-  remainingEnemies: 12
+  remainingEnemies: 8
   defeatPrefab: {fileID: 1171408719505548, guid: 2bb69d668f001c841ad96147d190d372,
     type: 2}
   victoryPrefab: {fileID: 1813985356141078, guid: 4ec933aad02fa8e4cab823fb5174ed24,
@@ -1543,6 +1543,7 @@ GameObject:
   - component: {fileID: 1560503045}
   - component: {fileID: 1560503047}
   - component: {fileID: 1560503046}
+  - component: {fileID: 1560503048}
   m_Layer: 5
   m_Name: Text (1)
   m_TagString: Untagged
@@ -1600,7 +1601,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'enemies remaining: 0'
+  m_Text: 'enemies remaining: 9'
 --- !u!222 &1560503047
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1608,6 +1609,17 @@ CanvasRenderer:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1560503044}
   m_CullTransparentMesh: 0
+--- !u!114 &1560503048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1560503044}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cd2fcf23d06e46a4822ce1da04c1515, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2026303755
 GameObject:
   m_ObjectHideFlags: 0
