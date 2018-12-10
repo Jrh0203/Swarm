@@ -37,7 +37,7 @@ public class BehaviorDemo : MonoBehaviour {
     bool RadiusCheck()
     {
         // GameObject p = GameManager.Instance.PlayerObj.gameObject;
-        float dist = Vector3.Distance(p.transform.position.normalized, transform.position);
+        float dist = Vector3.Distance(p.transform.position, transform.position);
         // Debug.Log("dist " + dist);
         bool result =  dist > 7.0;
         Debug.Log(result);
