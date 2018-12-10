@@ -10,11 +10,12 @@ public class Player : MonoBehaviour {
 	private float smoothSpeed = .4f;
     //gun stuff
     private BasicGun gun;
+	private float movementMultiplier = 1.0f;
     private bool shot = false;
 	public float hp = 100;
 	public float maxHp = 100;
 
-	private float range = 20;
+	private float range = 18;
 	private bool hit;
 	public float Range {
 		get {
@@ -48,7 +49,7 @@ public class Player : MonoBehaviour {
 	void Update () {
 		hit = false;
 		Vector3 moveDir = GetMoveDirection();
-		Vector3 moveVelocity = moveDir * Time.deltaTime * playerSpeed;
+		Vector3 moveVelocity = moveDir * Time.deltaTime * playerSpeed * movementMultiplier;
 		
 		//set velocity in x and z plane
 		playerVelocity.x = moveVelocity.x;
@@ -91,6 +92,10 @@ public class Player : MonoBehaviour {
 			hit = true;
 			hp = Mathf.Clamp(hp - damage, 0, hp);
 		}
+	}
+
+	public void SetMovementModifier(float modifier) {
+		movementMultiplier = modifier;
 	}
 
 	void OnTriggerEnter(Collider collider) {

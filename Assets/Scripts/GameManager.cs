@@ -5,6 +5,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 	public bool defeat;
 	public bool victory;
+	public int remainingEnemies;
 
 	private bool isPaused;
 	private static GameManager instance;
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour {
 		} else {
 			instance = this;
 		}
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 		hud = GameObject.FindGameObjectWithTag("HUD").GetComponent<Canvas>();
 		GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
 		enemies = new HashSet<Enemy>();
@@ -43,13 +45,25 @@ public class GameManager : MonoBehaviour {
 			enemies.Add(enemyObj.GetComponent<Enemy>());
 		}
 		circleSpots = new HashSet<Node>();
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 		grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
+	}
+
+	public void countDecrease(){
+		remainingEnemies-=1;
+		if (remainingEnemies<=0){
+			victory = true;
+		}
 	}
 
 	public Player PlayerObj {
 		get {
 			return player;
+		}
+	}
+
+	public int EnemiesLeft {
+		get {
+			return remainingEnemies;
 		}
 	}
 
@@ -79,7 +93,7 @@ public class GameManager : MonoBehaviour {
 		if(grid != null) {
 			Node newNode = grid.NodeFromWorldPos(player.transform.position);
 			if(oldPlayerNode == null || oldPlayerNode != newNode) {
-				//grid.UpdateCover();
+				grid.UpdateCover();
 				circleSpots = grid.UpdateBattleCircle();
 				oldPlayerNode = newNode;
 				//grid.UpdateCover();
@@ -90,7 +104,7 @@ public class GameManager : MonoBehaviour {
 	void OnGUI() {
 		if(victory && !isPaused) {
 			Time.timeScale = 0;
-			Instantiate(victoryPrefab, new Vector3(Screen.width * .5f, 0, Screen.height * .5f), Quaternion.identity, hud.transform);
+			Instantiate(victoryPrefab, new Vector3(Screen.width * .5f, Screen.height * .5f, 0), Quaternion.identity, hud.transform);
 			isPaused = true;
 		} else if (defeat && !isPaused){
 			Time.timeScale = 0;

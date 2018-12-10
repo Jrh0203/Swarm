@@ -95,6 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3d96a934188d1c744ab662bb0c52fe21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bullet: {fileID: 114047069408740918, guid: 0be0ecbe3cb78fa41aee35dc4dce71e2, type: 2}
+  bullet: {fileID: 1779160606093114, guid: 0be0ecbe3cb78fa41aee35dc4dce71e2, type: 2}
   usingCooldown: 1
-  coolDown: 1
+  initialCoolDown: 0.1
+  startingGun: 0
+  shotgunBulletCount: 9
+  shotgunBulletSpread: 45

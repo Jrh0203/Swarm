@@ -32,8 +32,8 @@ public class EnemyWaveSpawner : MonoBehaviour {
     {
         while (true) {
             if (spawnEnabled) { 
-                for (int i = -1 *waveSize/2; i < waveSize + (waveSize & 0x1); i++) {
-                    Instantiate(enemy, transform.position + new Vector3(i * 10, 0, 0), transform.rotation);
+                for (int i = 0; i < waveSize; i++) {
+                    Instantiate(enemy, transform.position + new Vector3(i * 5, 0, 0), transform.rotation);
                 }
             }
             yield return new WaitForSeconds(spawnRate);

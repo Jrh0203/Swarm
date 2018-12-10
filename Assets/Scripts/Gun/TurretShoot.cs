@@ -103,7 +103,7 @@ public class TurretShoot : MonoBehaviour {
         Player player = GameManager.Instance.PlayerObj;
 
         Vector3 fromPosition = transform.position;
-        Vector3 toPosition = GameManager.Instance.PlayerObj.transform.position;
+        Vector3 toPosition = player.transform.position;
         Vector3 direction = toPosition - fromPosition;
 
         // get average velocity based on previos activity
@@ -132,8 +132,11 @@ public class TurretShoot : MonoBehaviour {
             transform.eulerAngles.y,
             0
         );
+
+        Grid grid = GameManager.Instance.GridObj;
+        Node n = grid.NodeFromWorldPos(fromPosition);
         shotTimer += Time.deltaTime;
-        if (doShoot && shotTimer>coolDown){
+        if (doShoot && shotTimer>coolDown && n.isCover == false){
         	Shoot();
         }
 	}
