@@ -56,7 +56,7 @@ public class Grid : MonoBehaviour {
             }
         }
     	HashSet<Node> spots = new HashSet<Node>();
-    	Vector3 direction = new Vector3(1,0,0) * GameManager.Instance.PlayerObj.Range;
+    	Vector3 direction = new Vector3(1,0,0) * (GameManager.Instance.PlayerObj.Range-2);
     	int layer_mask = LayerMask.GetMask("Wall");
     	Vector3 fromPosition = GameManager.Instance.PlayerObj.transform.position;
     	int inc = 4;

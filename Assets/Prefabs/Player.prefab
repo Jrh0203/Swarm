@@ -199,8 +199,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 10
   playerVelocity: {x: 0, y: 0, z: 0}
-  hp: 100
-  maxHp: 100
+  hp: 10000
+  maxHp: 10000
 --- !u!114 &114253371478939574
 MonoBehaviour:
   m_ObjectHideFlags: 1

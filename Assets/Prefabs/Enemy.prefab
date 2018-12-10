@@ -125,6 +125,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 5
   drawGizmos: 0
+  isRanger: 0
   straifRadius: 1
   rotSpeed: 1
   startHp: 20
