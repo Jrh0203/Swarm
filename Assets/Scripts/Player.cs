@@ -37,12 +37,16 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	AudioSource hurtSound;
+
 	// Use this for initialization
 	void Start () {
 		hit = false;
 		controller = GetComponent<CharacterController>();
 		playerVelocity = new Vector3(0, 0, 0);
         gun = GetComponentInChildren<BasicGun>();
+
+		hurtSound = GetComponent<AudioSource>();
 	}
 	
 	// Update is called once per frame
@@ -91,6 +95,7 @@ public class Player : MonoBehaviour {
 		if(!hit) {
 			hit = true;
 			hp = Mathf.Clamp(hp - damage, 0, hp);
+			hurtSound.Play();
 		}
 	}
 

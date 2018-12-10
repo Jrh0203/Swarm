@@ -32,6 +32,11 @@ public class BasicGun : MonoBehaviour {
     //Bullet spread in degrees from center line
     [Range(0.0f, 180.0f)]
     [SerializeField] float shotgunBulletSpread = 45.0f;
+
+    // Audio
+    AudioSource shotgunSound;
+    AudioSource sniperSound;
+    AudioSource basicGunSound;
          
 	// Use this for initialization
 	void Start () {
@@ -43,6 +48,10 @@ public class BasicGun : MonoBehaviour {
         shotTimer = initialCoolDown;
         coolDown = initialCoolDown;
         setGunType(startingGun);
+
+        sniperSound = GetComponents<AudioSource>()[0];
+        shotgunSound = GetComponents<AudioSource>()[1];
+        basicGunSound = GetComponents<AudioSource>()[2];
 	}
 	
 	// Update is called once per frame
@@ -98,6 +107,7 @@ public class BasicGun : MonoBehaviour {
     public void ShootBasicGun() {
         Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
         GameObject b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset*2, transform.rotation);
+        basicGunSound.Play();
     }
 
     public void ShootShotgun() {
@@ -114,6 +124,7 @@ public class BasicGun : MonoBehaviour {
             GameObject b = Instantiate(bullet, transform.position + direction * barrelOffset * 2.0f, direction);
             b.GetComponent<Bullet>().SetLifeTime(shotgunBulletLifetime);
         }
+        shotgunSound.Play();
     }
 
     public void ShootSniper() {
@@ -139,6 +150,7 @@ public class BasicGun : MonoBehaviour {
         lineColor.a = 255.0f;
         lRend.startColor = lineColor;
         lRend.endColor = lineColor;
+        sniperSound.Play();
     }
 
     public void setGunType(GunType gun) {
