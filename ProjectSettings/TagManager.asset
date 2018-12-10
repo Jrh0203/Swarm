@@ -8,6 +8,8 @@ TagManager:
   - Manager
   - Enemy
   - Grid
+  - HUD
+  - EnemiesRemaining
   layers:
   - Default
   - TransparentFX
@@ -20,8 +22,8 @@ TagManager:
   - PostProcessing
   - Bullet
   - Wall
-  - 
-  - 
+  - t
+  - Enemy
   - 
   - 
   - 

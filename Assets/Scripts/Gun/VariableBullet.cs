@@ -54,6 +54,11 @@ public class VariableBullet : MonoBehaviour
     {
         return bulletDamage;
     }
+
+    public void SetLifeTime(float time) {
+        lifeTime = time;
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         if (dieOnCol) Seppuku();

@@ -626,7 +626,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 2
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0}
     m_HighlightedColor: {r: 1, g: 1, b: 1, a: 0.3372549}
@@ -645,7 +645,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 998114414}
+  m_TargetGraphic: {fileID: 931509857}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -674,7 +674,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -704,7 +704,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 998114411}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1a62fff8fdce2794289ae8063d681026, type: 3}
+  m_Script: {fileID: 11500000, guid: 26cde2219fe367d43b2359aa64de3b2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   play: {fileID: 0}

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class TurretShoot : MonoBehaviour {
 
+    LinkedList<Vector3> prevVelcities;
+    private const int PREV_VEL_NUM = 10;
+
     //how much extra space from mesh should it spawn
     private const float BULLET_OVERHEAD = 0.25f;
 
@@ -17,13 +20,18 @@ public class TurretShoot : MonoBehaviour {
     [Tooltip("How many secounds between each shot")]
     [SerializeField] private float coolDown = .1f;
 
+    public bool doShoot = true;
     private float shotTimer;
          
 	// Use this for initialization
 	void Start () {
         //c = GetComponent<BoxCollider>();
+        prevVelcities = new LinkedList<Vector3>();
         shotTimer = coolDown;
-	}
+        for(int i = 0; i < PREV_VEL_NUM; i ++)
+        prevVelcities.AddLast(Vector3.zero);
+
+    }
 
     public static Vector3 FirstOrderIntercept
     (
@@ -95,8 +103,18 @@ public class TurretShoot : MonoBehaviour {
         Player player = GameManager.Instance.PlayerObj;
 
         Vector3 fromPosition = transform.position;
-        Vector3 toPosition = GameManager.Instance.PlayerObj.transform.position;
+        Vector3 toPosition = player.transform.position;
         Vector3 direction = toPosition - fromPosition;
+
+        // get average velocity based on previos activity
+        prevVelcities.RemoveFirst();
+        prevVelcities.AddLast(GameManager.Instance.PlayerObj.playerVelocity);
+        Vector3 total = Vector3.zero;
+        foreach (Vector3 v in prevVelcities)
+        {
+            total += v;
+        }
+        total /= prevVelcities.Count;
 
         Vector3 interceptPoint = FirstOrderIntercept
         (
@@ -104,7 +122,8 @@ public class TurretShoot : MonoBehaviour {
             new Vector3(0,0,0),
             20,
             GameManager.Instance.PlayerObj.transform.position,
-            GameManager.Instance.PlayerObj.playerVelocity * 50
+            //GameManager.Instance.PlayerObj.playerVelocity * 50
+            total * 50
         );
 
         transform.LookAt(interceptPoint);
@@ -113,8 +132,11 @@ public class TurretShoot : MonoBehaviour {
             transform.eulerAngles.y,
             0
         );
+
+        Grid grid = GameManager.Instance.GridObj;
+        Node n = grid.NodeFromWorldPos(fromPosition);
         shotTimer += Time.deltaTime;
-        if (shotTimer>coolDown){
+        if (doShoot && shotTimer>coolDown && n.isCover == false){
         	Shoot();
         }
 	}

@@ -34,9 +34,6 @@ public class Bullet : MonoBehaviour {
         // check lifetime
         currentTime += Time.deltaTime;
         if (currentTime >= lifeTime) Seppuku();
-
-        // 
-
 	}
 
     // Method that destroys the bullet
@@ -45,9 +42,27 @@ public class Bullet : MonoBehaviour {
         Destroy(gameObject);
     }
 
+    public void setDamage(float damage) {
+        bulletDamage = damage;
+    }
+
+    public void setSpeed(float speed) {
+        shootSpeed = speed;
+        rB.velocity = transform.forward * shootSpeed;
+    }
+
     public float getDamage() {
         return bulletDamage;
     }
+
+    public float getSpeed() {
+        return shootSpeed;
+    }
+
+    public void SetLifeTime(float time) {
+        lifeTime = time;
+    }
+
     void OnTriggerEnter(Collider collider)
     {
         if (dieOnCol) Seppuku();

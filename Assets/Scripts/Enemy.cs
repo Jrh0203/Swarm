@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour {
 	private CharacterController controller;
 	private bool hit;
     private FlockMember fm;
+    public bool isRanger;
 
     [Tooltip("radius where the enemy will straif to move to its possition")]
     [SerializeField] float straifRadius = 1;
@@ -39,6 +40,13 @@ public class Enemy : MonoBehaviour {
 		hit = false;
 		StartCoroutine(UpdatePath());
 		explode = GetComponent<Explosion>();
+
+		isRanger = false;
+		TurretShoot rangerTest = GetComponentInChildren<TurretShoot>();
+		if (rangerTest != null)
+		{
+		    isRanger = true;
+		}
 	}
 	
 	// Update is called once per frame
@@ -55,6 +63,15 @@ public class Enemy : MonoBehaviour {
 
         Vector3 finalDir = (moveDir + flockDir);
         GoToTarget(finalDir);
+
+        Vector3 pos = transform.position;
+        Vector3 playerPos = GameManager.Instance.PlayerObj.transform.position;
+        float dist = (playerPos-pos).magnitude;
+        if (dist<1.9){
+        	explode.explode();
+			GameManager.Instance.PlayerObj.hurt(10.0f);
+			Death();
+        }
 	}
 
 	IEnumerator UpdatePath() {
@@ -70,7 +87,7 @@ public class Enemy : MonoBehaviour {
 			if (oldPlayerNode == null || oldPlayerNode != newPlayerNode) {
 				Node dest = findClosestCircleNode();
 				Vector3 newPos;
-				if(dest != null) {
+				if(dest != null && isRanger == true) {
 					newPos = grid.WorldFromNodeXY(dest.gridX, dest.gridY);
 				} else {
 					newPos = player.transform.position;
@@ -155,7 +172,7 @@ public class Enemy : MonoBehaviour {
 	void OnTriggerEnter(Collider collider) {
 		if(collider.gameObject.tag == "Player") {
 			Player p = collider.gameObject.GetComponent<Player>();
-			p.hit(10.0f);
+			p.hurt(10.0f);
 			Death();	
 		}
         if(collider.gameObject.layer == LayerMask.NameToLayer("Bullet")) {
@@ -172,6 +189,10 @@ public class Enemy : MonoBehaviour {
 	void Death() {
 		GameManager.Instance.EnemiesObj.Remove(this);
 		Destroy(gameObject);
+
+		GameManager gm = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();;
+
+		gm.countDecrease();
 	}
 
     public Vector3 GoToTarget(Vector3 tgt)
@@ -200,4 +221,8 @@ public class Enemy : MonoBehaviour {
         controller.Move(enemyVelocity);
         return enemyVelocity;
     }
+
+	public void TakeDamage(float damage) {
+		hp -= damage;
+	}
 }

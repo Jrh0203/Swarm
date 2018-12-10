@@ -4958,8 +4958,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2b3a56dd4bb2e244ab2b7f5152c0461, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnRate: 2
-  waveSize: 4
+  spawnRate: 0.93
+  waveSize: 5
   enemy: {fileID: 1732149238877888, guid: 0a36b4b6111b5244382fa6c6c8c6f92e, type: 2}
   spawnEnabled: 0
 --- !u!1001 &1655702535
@@ -5080,7 +5080,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1727016852}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 9.433629, y: 20, z: 10}
+  m_LocalPosition: {x: 0, y: 20, z: 2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}

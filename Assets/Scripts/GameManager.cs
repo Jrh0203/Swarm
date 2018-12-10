@@ -3,8 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour {
-	private static GameManager instance;
+	public bool defeat;
+	public bool victory;
+	public int remainingEnemies;
 
+	private bool isPaused;
+	private static GameManager instance;
+	public GameObject defeatPrefab;
+	public GameObject victoryPrefab;
 	public static GameManager Instance {
 		get {
 			return instance;
@@ -15,32 +21,49 @@ public class GameManager : MonoBehaviour {
 	Player player;
 	Grid grid;
 	HashSet<Node> circleSpots;
+	Canvas hud;
 
 	public static List<GameObject> cubes;
 
 	private Node oldPlayerNode;
 
 	void Awake () {
+		isPaused = false;
+		defeat = false;
+		victory = false;
 		cubes = new List<GameObject>();
 		if(instance != null && instance != this) {
 			Destroy(this.gameObject);
 		} else {
 			instance = this;
 		}
-		
+		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+		hud = GameObject.FindGameObjectWithTag("HUD").GetComponent<Canvas>();
 		GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
 		enemies = new HashSet<Enemy>();
 		foreach(GameObject enemyObj in enemyObjects) {
 			enemies.Add(enemyObj.GetComponent<Enemy>());
 		}
 		circleSpots = new HashSet<Node>();
-		player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
 		grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
+	}
+
+	public void countDecrease(){
+		remainingEnemies-=1;
+		if (remainingEnemies<=0){
+			victory = true;
+		}
 	}
 
 	public Player PlayerObj {
 		get {
 			return player;
+		}
+	}
+
+	public int EnemiesLeft {
+		get {
+			return remainingEnemies;
 		}
 	}
 
@@ -64,23 +87,29 @@ public class GameManager : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-		/*
-		GameObject[] enemyObjects = GameObject.FindGameObjectsWithTag("Enemy");
-		enemies = new HashSet<Enemy>();
-		foreach(GameObject enemyObj in enemyObjects) {
-			enemies.Add(enemyObj.GetComponent<Enemy>());
+		if(player.hp <= 0) {
+			defeat = true;
 		}
-		*/
-		
 		if(grid != null) {
 			Node newNode = grid.NodeFromWorldPos(player.transform.position);
 			if(oldPlayerNode == null || oldPlayerNode != newNode) {
-				//grid.UpdateCover();
+				grid.UpdateCover();
 				circleSpots = grid.UpdateBattleCircle();
 				oldPlayerNode = newNode;
 				//grid.UpdateCover();
 			}
+		}
+	}
+
+	void OnGUI() {
+		if(victory && !isPaused) {
+			Time.timeScale = 0;
+			Instantiate(victoryPrefab, new Vector3(Screen.width * .5f, Screen.height * .5f, 0), Quaternion.identity, hud.transform);
+			isPaused = true;
+		} else if (defeat && !isPaused){
+			Time.timeScale = 0;
+			Instantiate(defeatPrefab, new Vector3(Screen.width * .5f, Screen.height * .5f, 0), Quaternion.identity, hud.transform);
+			isPaused = true;
 		}
 	}
 }
