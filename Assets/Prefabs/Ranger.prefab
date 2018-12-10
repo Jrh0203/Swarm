@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 114991747936158354}
   - component: {fileID: 114760967730199340}
   - component: {fileID: 114902449298718322}
-  - component: {fileID: 82230966846865018}
+  - component: {fileID: 82824733645895938}
   m_Layer: 12
   m_Name: Ranger
   m_TagString: Enemy
@@ -102,7 +102,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!82 &82230966846865018
+--- !u!82 &82824733645895938
 AudioSource:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -111,9 +111,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 7d2a58ccfeab01e4cbd18fe328488150, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 6fdaedee07fff4f41bdbab059e133f86, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.13
   m_Pitch: 1
   Loop: 0
   Mute: 0

@@ -22,6 +22,8 @@ public class TurretShoot : MonoBehaviour {
 
     public bool doShoot = true;
     private float shotTimer;
+
+    AudioSource gunSound;
          
 	// Use this for initialization
 	void Start () {
@@ -31,6 +33,7 @@ public class TurretShoot : MonoBehaviour {
         for(int i = 0; i < PREV_VEL_NUM; i ++)
         prevVelcities.AddLast(Vector3.zero);
 
+        gunSound = GetComponent<AudioSource>();
     }
 
     public static Vector3 FirstOrderIntercept
@@ -149,6 +152,7 @@ public class TurretShoot : MonoBehaviour {
             Vector3 barrelOffset = new Vector3(0, 0, transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
             Bullet b = Instantiate(bullet, transform.position + transform.rotation * barrelOffset, transform.rotation);
             shotTimer = 0;
+            gunSound.Play();
             return true;
         } 
         else
