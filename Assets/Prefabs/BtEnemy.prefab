@@ -28,6 +28,7 @@ GameObject:
   - component: {fileID: 114727095126766154}
   - component: {fileID: 114577555773125834}
   - component: {fileID: 114321732783006514}
+  - component: {fileID: 114121060069732102}
   m_Layer: 0
   m_Name: BtEnemy
   m_TagString: Enemy
@@ -102,6 +103,21 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &114121060069732102
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1584044368623968}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 447834754741248619ec93938bcd958f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bullet: {fileID: 0}
+  usingCooldown: 1
+  coolDown: 0.1
+  doShoot: 1
 --- !u!114 &114321732783006514
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -130,6 +146,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   enemySpeed: 5
   drawGizmos: 0
+  isRanger: 0
   straifRadius: 1
   rotSpeed: 1
   startHp: 20

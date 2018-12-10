@@ -10,38 +10,48 @@ public class BehaviorDemo : MonoBehaviour {
     Material m;
     [SerializeField] GameObject p;
     Color nextC;
+    Color startC;
 
 
     float timer = 0;
-    float maxTime = 10.0f;
+    float maxTime = 1.0f;
     // Use this for initialization
-    void Start () {
+    void Start()
+    {
         bt = GetComponent<BehaviorTree>();
         m = GetComponent<Renderer>().material;
         Debug.Log(bt);
         root = bt.root;
         root.AddChild(new Condition(RadiusCheck));
-        root.AddChild(new BAction(RandomColor));
+        root.AddChild(new BAction(() =>
+        {
+            Status s = RandomColor();
+            Debug.Log("CURRENT CUBE STATUS: " + s);
+            return s;
+        }));
         m.color = Random.ColorHSV();
+        startC = m.color;
         nextC = Random.ColorHSV();
-
     }
+        
     bool RadiusCheck()
     {
         // GameObject p = GameManager.Instance.PlayerObj.gameObject;
-        float dist = Mathf.Abs((p.transform.position - transform.position).magnitude);
+        float dist = Vector3.Distance(p.transform.position.normalized, transform.position);
         // Debug.Log("dist " + dist);
-        return dist > 10.0;
+        bool result =  dist > 7.0;
+        Debug.Log(result);
+        return result;
     }
 
 	Status RandomColor()
     {
         timer += Time.deltaTime;
-        m.color = Color.Lerp(m.color, nextC, timer / maxTime);
+        m.color = Color.Lerp(startC, nextC, timer / maxTime);
         if (timer < maxTime)
             return Status.RUNNING;
-        Debug.Log("WE DID IT BOIS");
         timer = 0;
+        startC = m.color;
         nextC = Random.ColorHSV();
         return Status.SUCCESS;
     }
