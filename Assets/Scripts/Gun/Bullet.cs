@@ -15,7 +15,8 @@ public class Bullet : MonoBehaviour {
     private float currentTime;
     private Rigidbody rB;
 
-    private float bulletDamage;
+    [SerializeField]
+    private float bulletDamage = 10.0f;
 
     // used when object is awoken
     private void Awake()
@@ -25,7 +26,6 @@ public class Bullet : MonoBehaviour {
         currentTime = 0;
 
         rB.velocity = transform.forward * shootSpeed;
-        bulletDamage = 10.0f;
     }
 	
 	// Update is called once per frame
