@@ -27,6 +27,9 @@ public class GameManager : MonoBehaviour {
 
 	private Node oldPlayerNode;
 
+	AudioSource yellSound;
+	bool playedYell = false;
+
 	void Awake () {
 		isPaused = false;
 		defeat = false;
@@ -46,6 +49,8 @@ public class GameManager : MonoBehaviour {
 		}
 		circleSpots = new HashSet<Node>();
 		grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
+
+		yellSound = GetComponent<AudioSource>();
 	}
 
 	public void countDecrease(){
@@ -88,6 +93,10 @@ public class GameManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		if(player.hp <= 0) {
+			if (!playedYell) {
+				yellSound.Play();
+				playedYell = true;
+			}
 			defeat = true;
 		}
 		if(grid != null) {
