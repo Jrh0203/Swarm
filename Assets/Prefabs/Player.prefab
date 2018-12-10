@@ -58,7 +58,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1567110340433002}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -28.9, y: 1.8, z: -7.8}
+  m_LocalPosition: {x: 0.1, y: 1.8, z: -26.4}
   m_LocalScale: {x: 1, y: 2.025, z: 1}
   m_Children:
   - {fileID: 4583923597318226}
@@ -216,7 +216,7 @@ MonoBehaviour:
   usingCooldown: 1
   initialCoolDown: 0.1
   startingGun: 0
-  shotgunBulletCount: 4
+  shotgunBulletCount: 7
   shotgunBulletSpread: 45
 --- !u!120 &120181044092114052
 LineRenderer:

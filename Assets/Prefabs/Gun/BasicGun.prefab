@@ -99,5 +99,5 @@ MonoBehaviour:
   usingCooldown: 1
   initialCoolDown: 0.1
   startingGun: 0
-  shotgunBulletCount: 4
+  shotgunBulletCount: 9
   shotgunBulletSpread: 45

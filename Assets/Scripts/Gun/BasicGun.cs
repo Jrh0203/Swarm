@@ -71,12 +71,14 @@ public class BasicGun : MonoBehaviour {
     public bool Shoot () {
         if (!usingCooldown || shotTimer >= coolDown)
         {
+            float addTo = .0f;
             switch (gunType) {
                 case GunType.Shotgun:
                     ShootShotgun();
                     break;
                 case GunType.Sniper:
                     ShootSniper();
+                    addTo = .5f;
                     break;
                 case GunType.BasicGun:
                 default:
@@ -84,6 +86,7 @@ public class BasicGun : MonoBehaviour {
                     break;
             }
             shotTimer = 0;
+            shotTimer+=addTo;
             return true;
         } 
         else
@@ -118,7 +121,12 @@ public class BasicGun : MonoBehaviour {
         
         RaycastHit hit;
         LayerMask mask = LayerMask.GetMask("Enemy") | LayerMask.GetMask("Wall");
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, mask)) {
+        Vector3 forwardVector = transform.TransformDirection(Vector3.forward);
+        forwardVector.y = 0.0f;
+        Vector3 posVector = transform.position;
+        posVector.y = .8f;
+        Debug.Log(transform.position);
+        if (Physics.Raycast(posVector, forwardVector, out hit, Mathf.Infinity, mask)) {
             if (hit.collider.gameObject.tag == "Enemy") {
                 Enemy e = hit.collider.gameObject.GetComponent<Enemy>();
                 e.TakeDamage(sniperDamage);
