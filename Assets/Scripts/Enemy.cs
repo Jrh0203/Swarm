@@ -30,6 +30,7 @@ public class Enemy : MonoBehaviour {
     [SerializeField] private float startHp = 20;
 
     private Explosion explode;
+	[SerializeField] GameObject explosionSound;
 
     // Use this for initialization
 	void Start () {
@@ -189,6 +190,8 @@ public class Enemy : MonoBehaviour {
 	void Death() {
 		GameManager.Instance.EnemiesObj.Remove(this);
 		Destroy(gameObject);
+
+		if (explosionSound != null) Instantiate(explosionSound, transform.position, transform.rotation);
 
 		GameManager gm = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();;
 
