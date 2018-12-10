@@ -27,7 +27,9 @@ public class Camera : MonoBehaviour {
         Vector3 desiredPos;
         if (usingSniper) {
             float sniperZoomRatio = 1.25f;
-            desiredPos = cameraDistVect * sniperZoomRatio + GameObject.FindWithTag("Player").transform.position + GameObject.FindWithTag("Player").transform.forward * 20;
+            desiredPos = cameraDistVect * sniperZoomRatio + GameObject.FindWithTag("Player").transform.position;
+            // desiredPos = cameraDistVect * sniperZoomRatio + GameObject.FindWithTag("Player").transform.position + GameObject.FindWithTag("Player").transform.forward * 20;
+
         }
         else {
 		    desiredPos = cameraDistVect + GameObject.FindWithTag("Player").transform.position;

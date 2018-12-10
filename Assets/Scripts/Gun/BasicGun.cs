@@ -98,7 +98,7 @@ public class BasicGun : MonoBehaviour {
     }
 
     public void ShootShotgun() {
-        float shotgunBulletLifetime = 1.0f;
+        float shotgunBulletLifetime = 0.5f;
         Vector3 barrelOffset = new Vector3(0, 0, c.transform.localScale.z / 2 + bullet.transform.localScale.z / 2 + BULLET_OVERHEAD);
 
         float degreesBetweenBullets = (shotgunBulletSpread / (shotgunBulletCount - 1)) * 2;
@@ -136,17 +136,25 @@ public class BasicGun : MonoBehaviour {
     public void setGunType(GunType gun) {
         Camera cam = GameObject.FindWithTag("MainCamera").GetComponent<Camera>();
         cam.SetSniperView(false);
+        Player player = GameObject.FindWithTag("Player").GetComponent<Player>();
+
         gunType = gun;
         switch (gunType) {
             case GunType.Shotgun:
                 coolDown = initialCoolDown * 5;
+                player.SetMovementModifier(1.0f);
                 break;
             case GunType.Sniper:
                 coolDown = initialCoolDown * 8;
                 cam.SetSniperView(true);
+                player.SetMovementModifier(0.25f);
                 break;
             case GunType.BasicGun:
+                player.SetMovementModifier(1.1f);
+                coolDown = initialCoolDown;
+                break;
             default:
+                player.SetMovementModifier(1.0f);
                 coolDown = initialCoolDown;
                 break;
         }
