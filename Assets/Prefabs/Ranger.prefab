@@ -27,7 +27,7 @@ GameObject:
   - component: {fileID: 114991747936158354}
   - component: {fileID: 114760967730199340}
   - component: {fileID: 114902449298718322}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: Ranger
   m_TagString: Enemy
   m_Icon: {fileID: 0}
