@@ -48,6 +48,13 @@ public class GameManager : MonoBehaviour {
 		grid = GameObject.FindGameObjectWithTag("Grid").GetComponent<Grid>();
 	}
 
+	public void countDecrease(){
+		remainingEnemies-=1;
+		if (remainingEnemies<=0){
+			victory = true;
+		}
+	}
+
 	public Player PlayerObj {
 		get {
 			return player;
@@ -97,7 +104,7 @@ public class GameManager : MonoBehaviour {
 	void OnGUI() {
 		if(victory && !isPaused) {
 			Time.timeScale = 0;
-			Instantiate(victoryPrefab, new Vector3(Screen.width * .5f, 0, Screen.height * .5f), Quaternion.identity, hud.transform);
+			Instantiate(victoryPrefab, new Vector3(Screen.width * .5f, Screen.height * .5f, 0), Quaternion.identity, hud.transform);
 			isPaused = true;
 		} else if (defeat && !isPaused){
 			Time.timeScale = 0;

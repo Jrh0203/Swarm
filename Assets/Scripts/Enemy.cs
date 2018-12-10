@@ -172,6 +172,10 @@ public class Enemy : MonoBehaviour {
 	void Death() {
 		GameManager.Instance.EnemiesObj.Remove(this);
 		Destroy(gameObject);
+
+		GameManager gm = GameObject.FindGameObjectWithTag("GameController").GetComponent<GameManager>();;
+
+		gm.countDecrease();
 	}
 
     public Vector3 GoToTarget(Vector3 tgt)
