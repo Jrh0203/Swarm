@@ -356,7 +356,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defeat: 0
   victory: 0
-  remainingEnemies: 75
+  remainingEnemies: 60
   defeatPrefab: {fileID: 1171408719505548, guid: 2bb69d668f001c841ad96147d190d372,
     type: 2}
   victoryPrefab: {fileID: 1813985356141078, guid: 4ec933aad02fa8e4cab823fb5174ed24,
