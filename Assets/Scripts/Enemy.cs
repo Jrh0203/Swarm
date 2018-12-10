@@ -63,6 +63,15 @@ public class Enemy : MonoBehaviour {
 
         Vector3 finalDir = (moveDir + flockDir);
         GoToTarget(finalDir);
+
+        Vector3 pos = transform.position;
+        Vector3 playerPos = GameManager.Instance.PlayerObj.transform.position;
+        float dist = (playerPos-pos).magnitude;
+        if (dist<1.9){
+        	explode.explode();
+			GameManager.Instance.PlayerObj.hurt(10.0f);
+			Death();
+        }
 	}
 
 	IEnumerator UpdatePath() {

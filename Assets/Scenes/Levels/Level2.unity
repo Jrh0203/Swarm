@@ -1473,6 +1473,16 @@ Prefab:
       propertyPath: m_Name
       value: Body
       objectReference: {fileID: 0}
+    - target: {fileID: 114102350979393280, guid: 591fc76ef5c807045a25a2ab78fa2f29,
+        type: 2}
+      propertyPath: hp
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 114102350979393280, guid: 591fc76ef5c807045a25a2ab78fa2f29,
+        type: 2}
+      propertyPath: maxHp
+      value: 100
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 591fc76ef5c807045a25a2ab78fa2f29, type: 2}
   m_IsPrefabAsset: 0

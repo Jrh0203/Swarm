@@ -108,7 +108,7 @@ public class BasicGun : MonoBehaviour {
             float bulletDegrees = -shotgunBulletSpread + i * degreesBetweenBullets;
             if (bulletDegrees <= 0) bulletDegrees += 360.0f; 
             Quaternion direction = transform.rotation * Quaternion.AngleAxis(bulletDegrees, Vector3.up);
-            GameObject b = Instantiate(bullet, transform.position + direction * barrelOffset * 1.5f, direction);
+            GameObject b = Instantiate(bullet, transform.position + direction * barrelOffset * 2.0f, direction);
             b.GetComponent<Bullet>().SetLifeTime(shotgunBulletLifetime);
         }
     }
