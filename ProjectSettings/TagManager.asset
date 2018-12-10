@@ -9,6 +9,7 @@ TagManager:
   - Enemy
   - Grid
   - HUD
+  - EnemiesRemaining
   layers:
   - Default
   - TransparentFX
