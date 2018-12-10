@@ -12,6 +12,7 @@ public class Enemy : MonoBehaviour {
 	private CharacterController controller;
 	private bool hit;
     private FlockMember fm;
+    public bool isRanger;
 
     [Tooltip("radius where the enemy will straif to move to its possition")]
     [SerializeField] float straifRadius = 1;
@@ -39,6 +40,13 @@ public class Enemy : MonoBehaviour {
 		hit = false;
 		StartCoroutine(UpdatePath());
 		explode = GetComponent<Explosion>();
+
+		isRanger = false;
+		TurretShoot rangerTest = GetComponentInChildren<TurretShoot>();
+		if (rangerTest != null)
+		{
+		    isRanger = true;
+		}
 	}
 	
 	// Update is called once per frame
@@ -70,7 +78,7 @@ public class Enemy : MonoBehaviour {
 			if (oldPlayerNode == null || oldPlayerNode != newPlayerNode) {
 				Node dest = findClosestCircleNode();
 				Vector3 newPos;
-				if(dest != null) {
+				if(dest != null && isRanger == true) {
 					newPos = grid.WorldFromNodeXY(dest.gridX, dest.gridY);
 				} else {
 					newPos = player.transform.position;
