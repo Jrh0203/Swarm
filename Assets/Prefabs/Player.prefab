@@ -599,7 +599,9 @@ MonoBehaviour:
   bullet: {fileID: 1779160606093114, guid: 0be0ecbe3cb78fa41aee35dc4dce71e2, type: 2}
   usingCooldown: 1
   initialCoolDown: 0.1
+  coolDown: 0.1
   startingGun: 0
+  shotTimer: 0.1
   shotgunBulletCount: 7
   shotgunBulletSpread: 45
 --- !u!120 &120181044092114052

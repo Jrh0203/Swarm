@@ -17,13 +17,13 @@ public class BasicGun : MonoBehaviour {
     [SerializeField] private bool usingCooldown = true;
 
     [Tooltip("How many secounds between each shot")]
-    [SerializeField] private float initialCoolDown = .1f;
-    private float coolDown;
+    [SerializeField] private float initialCoolDown = .8f;
+    public float coolDown;
 
     public enum GunType {BasicGun, Shotgun, Sniper};
     [SerializeField] GunType startingGun = GunType.BasicGun;
     private GunType gunType;
-    private float shotTimer;
+    public float shotTimer;
 
 
     // Shotgun Fields
@@ -45,9 +45,10 @@ public class BasicGun : MonoBehaviour {
         lRend = GetComponent<LineRenderer>();
         lRend.material = new Material (Shader.Find("Particles/Additive"));
 
-        shotTimer = initialCoolDown;
+        shotTimer = 0;
         coolDown = initialCoolDown;
         setGunType(startingGun);
+        setGunType(GunType.BasicGun);
 
         sniperSound = GetComponents<AudioSource>()[0];
         shotgunSound = GetComponents<AudioSource>()[1];
@@ -56,7 +57,12 @@ public class BasicGun : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+        Color shotColor = lRend.startColor;
+        shotColor.a -= .03f;
+        lRend.startColor = shotColor;
+        lRend.endColor = shotColor;
         shotTimer += Time.deltaTime;
+
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
             setGunType(GunType.BasicGun);
@@ -69,33 +75,31 @@ public class BasicGun : MonoBehaviour {
         }
 
         // Fading out sniper shots
-        Color shotColor = lRend.startColor;
-        shotColor.a -= 0.03f;
-        lRend.startColor = shotColor;
-        lRend.endColor = shotColor;
+        
 	}
 
     // method to shoot a bullet
     // returns true if sucessfully shot, false otherwise
     public bool Shoot () {
-        if (!usingCooldown || shotTimer >= coolDown)
+        if (shotTimer >= coolDown)
         {
+            shotTimer = 0.0f;
             float addTo = .0f;
+            if (gunType == GunType.Sniper){
+                shotTimer+=.5f;
+            }
             switch (gunType) {
                 case GunType.Shotgun:
                     ShootShotgun();
                     break;
                 case GunType.Sniper:
                     ShootSniper();
-                    addTo = .5f;
                     break;
                 case GunType.BasicGun:
                 default:
                     ShootBasicGun();
                     break;
             }
-            shotTimer = 0;
-            shotTimer+=addTo;
             return true;
         } 
         else

@@ -270,7 +270,7 @@ MonoBehaviour:
   isRanger: 0
   straifRadius: 1
   rotSpeed: 1
-  startHp: 20
+  startHp: 10
   explosionSound: {fileID: 1852291935540340, guid: b7b9df8b4e4964742b272bb8bfc9f9b8,
     type: 2}
 --- !u!143 &143022797281383546

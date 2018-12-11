@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657856, g: 0.49641234, b: 0.57481724, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -494,12 +494,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc61e583a5e6e094196a2cfbe23ce52a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  p: {fileID: 962970877}
---- !u!1 &962970877 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1226422362366136, guid: 591fc76ef5c807045a25a2ab78fa2f29,
-    type: 2}
-  m_PrefabInternal: {fileID: 1938385629}
+  p: {fileID: 1651208334}
 --- !u!1 &1045332858
 GameObject:
   m_ObjectHideFlags: 0
@@ -529,6 +524,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   defeat: 0
   victory: 0
+  remainingEnemies: 0
   defeatPrefab: {fileID: 0}
   victoryPrefab: {fileID: 0}
 --- !u!4 &1045332860
@@ -542,70 +538,13 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1534864310
-Prefab:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 4774291272874344, guid: 9d573226f161a0948a1767317d446231, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: -1.46
-      objectReference: {fileID: 0}
-    - target: {fileID: 4774291272874344, guid: 9d573226f161a0948a1767317d446231, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4774291272874344, guid: 9d573226f161a0948a1767317d446231, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 4.74
-      objectReference: {fileID: 0}
-    - target: {fileID: 4774291272874344, guid: 9d573226f161a0948a1767317d446231, type: 2}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4774291272874344, guid: 9d573226f161a0948a1767317d446231, type: 2}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4774291272874344, guid: 9d573226f161a0948a1767317d446231, type: 2}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4774291272874344, guid: 9d573226f161a0948a1767317d446231, type: 2}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4774291272874344, guid: 9d573226f161a0948a1767317d446231, type: 2}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 9d573226f161a0948a1767317d446231, type: 2}
-  m_IsPrefabAsset: 0
---- !u!1 &1566612242 stripped
+--- !u!1 &1651208334 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 1584044368623968, guid: 9d573226f161a0948a1767317d446231,
+  m_CorrespondingSourceObject: {fileID: 1567110340433002, guid: 591fc76ef5c807045a25a2ab78fa2f29,
     type: 2}
-  m_PrefabInternal: {fileID: 1534864310}
---- !u!114 &1566612243
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1566612242}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 447834754741248619ec93938bcd958f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bullet: {fileID: 0}
-  usingCooldown: 1
-  coolDown: 0.1
-  doShoot: 1
+  m_PrefabInternal: {fileID: 1938385629}
 --- !u!1001 &1872333361
 Prefab:
   m_ObjectHideFlags: 0
@@ -643,7 +582,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4057509010824078, guid: dc78c8887dcf0ec43afe6e394c920e2f, type: 2}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc78c8887dcf0ec43afe6e394c920e2f, type: 2}
